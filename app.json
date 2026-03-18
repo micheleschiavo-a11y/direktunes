@@ -15,7 +15,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.direktunes.musicaqualunque",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -26,7 +28,10 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,6 +43,12 @@
           "microphonePermission": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "733a4035-d051-4be8-a1ef-4cfc6160f347"
+      }
+    },
+    "owner": "micheleschiavo"
   }
 }
