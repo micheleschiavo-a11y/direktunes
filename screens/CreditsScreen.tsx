@@ -1,10 +1,13 @@
 import React from 'react';
-import { ScrollView, Text, View, StyleSheet } from 'react-native';
+import { ScrollView, Text, View, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ACCENT = '#C8A951';
 const BG = '#0A0A0A';
 const BANNER_HEIGHT = 110;
+
+// ⚠️  Replace this URL with wherever you host privacy.html (e.g. GitHub Pages)
+const PRIVACY_URL = 'https://micheleschiavo-a11y.github.io/miskia-privacy/';
 
 const CREDITS_TEXT = `"Todo lo que no es tradición es plagio" è un aforisma attribuito allo scrittore spagnolo Eugenio d'Ors.
 
@@ -34,7 +37,7 @@ export default function CreditsScreen() {
       {/* Ownership Badge */}
       <View style={styles.badge}>
         <Text style={styles.badgeIcon}>🎵</Text>
-        <Text style={styles.badgeTitle}>Album di tua proprietà</Text>
+        <Text style={styles.badgeTitle}>Licenza d'uso</Text>
         <Text style={styles.badgeSubtitle}>
           Acquistato una volta per sempre.{'\n'}Nessuno streaming, nessun abbonamento.
         </Text>
@@ -42,6 +45,15 @@ export default function CreditsScreen() {
           <Text style={styles.badgeSealText}>Direktunes · Owned Outright</Text>
         </View>
       </View>
+
+      {/* Privacy Policy */}
+      <TouchableOpacity
+        style={styles.privacyBtn}
+        onPress={() => Linking.openURL(PRIVACY_URL)}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.privacyBtnText}>Privacy Policy</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -128,6 +140,17 @@ const styles = StyleSheet.create({
     color: '#555555',
     fontSize: 11,
     letterSpacing: 1.5,
+    textTransform: 'uppercase',
+  },
+  privacyBtn: {
+    marginTop: 32,
+    alignSelf: 'center',
+  },
+  privacyBtnText: {
+    color: '#555555',
+    fontSize: 12,
+    letterSpacing: 1,
+    textDecorationLine: 'underline',
     textTransform: 'uppercase',
   },
 });

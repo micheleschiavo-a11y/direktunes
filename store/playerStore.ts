@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import type { AudioPlayer, AudioStatus } from 'expo-audio';
 import { TRACKS } from '../data/tracks';
 
 export type Screen = 'home' | 'lyrics' | 'notes' | 'credits';
@@ -15,7 +16,7 @@ interface PlayerStore {
   isShuffled: boolean;
   position: number;  // seconds
   duration: number;  // seconds
-  sound: Audio.Sound | null;
+  sound: AudioPlayer | null;
   shuffleOrder: number[];
 
   // Actions
@@ -25,8 +26,7 @@ interface PlayerStore {
   skipNext: () => Promise<void>;
   skipPrev: () => Promise<void>;
   toggleShuffle: () => void;
-  seek: (seconds: number) => Promise<void>;
-  _onPlaybackStatus: (status: AVPlaybackStatus) => void;
+  seek: (seconds: number) => void;
   _getNextIndex: () => number;
   _getPrevIndex: () => number;
 }
@@ -38,6 +38,16 @@ function generateShuffleOrder(length: number, current: number): number[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return [current, ...arr];
+}
+
+// Track the current status subscription outside the store
+let currentSubscription: { remove: () => void } | null = null;
+
+function clearSubscription() {
+  if (currentSubscription) {
+    currentSubscription.remove();
+    currentSubscription = null;
+  }
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -53,44 +63,52 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   shuffleOrder: Array.from({ length: TRACKS.length }, (_, i) => i),
 
   initAudio: async () => {
-    await Audio.setAudioModeAsync({
-      staysActiveInBackground: true,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
+    await setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
     });
   },
 
-  _onPlaybackStatus: (status: AVPlaybackStatus) => {
-    if (!status.isLoaded) return;
-    const pos = (status.positionMillis ?? 0) / 1000;
-    const dur = (status.durationMillis ?? 0) / 1000;
-    set({ position: pos, duration: dur, isPlaying: status.isPlaying });
-
-    if (status.didJustFinish) {
-      set({ isPlaying: false });
-      get().skipNext();
-    }
-  },
-
   loadAndPlayTrack: async (index: number) => {
-    const { sound: prevSound, _onPlaybackStatus } = get();
+    const { sound: prevSound } = get();
+    clearSubscription();
     if (prevSound) {
-      await prevSound.stopAsync();
-      await prevSound.unloadAsync();
+      prevSound.pause();
+      prevSound.remove();
     }
 
     const track = TRACKS[index];
-    const { sound } = await Audio.Sound.createAsync(
-      track.file,
-      { shouldPlay: true, progressUpdateIntervalMillis: 500 },
-      _onPlaybackStatus
-    );
+    const player = createAudioPlayer(track.file, 100);
 
     set({
-      sound,
+      sound: player,
       currentTrackIndex: index,
       isPlaying: true,
       position: 0,
+    });
+
+    let playStarted = false;
+
+    currentSubscription = player.addListener('playbackStatusUpdate', (status: AudioStatus) => {
+      // Start playback once the audio is loaded
+      if (status.isLoaded && !playStarted) {
+        playStarted = true;
+        player.play();
+      }
+
+      // Keep UI in sync
+      usePlayerStore.setState({
+        position: status.currentTime,
+        duration: status.duration,
+        isPlaying: status.playing,
+      });
+
+      // Auto-advance to next track
+      if (status.didJustFinish) {
+        clearSubscription();
+        usePlayerStore.setState({ isPlaying: false });
+        usePlayerStore.getState().skipNext();
+      }
     });
   },
 
@@ -101,10 +119,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       return;
     }
     if (isPlaying) {
-      await sound.pauseAsync();
+      sound.pause();
       set({ isPlaying: false });
     } else {
-      await sound.playAsync();
+      sound.play();
       set({ isPlaying: true });
     }
   },
@@ -135,10 +153,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   skipPrev: async () => {
     const { position } = get();
     if (position > 3) {
-      // restart current track
       const { sound } = get();
       if (sound) {
-        await sound.setPositionAsync(0);
+        sound.seekTo(0);
         set({ position: 0 });
       }
     } else {
@@ -157,10 +174,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
   },
 
-  seek: async (seconds: number) => {
+  seek: (seconds: number) => {
     const { sound } = get();
     if (sound) {
-      await sound.setPositionAsync(seconds * 1000);
+      sound.seekTo(seconds);
       set({ position: seconds });
     }
   },

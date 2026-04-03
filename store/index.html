@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Direktunes — Publish Your Music as an App</title>
+  <meta name="description" content="Direktunes is the AI-based tool for independent musicians to publish their albums as mobile apps without streaming or monthly fees." />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0C0E1A;
+      color: #F0F0F0;
+      line-height: 1.6;
+    }
+
+    /* ── Palette ──────────────────────────────────────── */
+    :root {
+      --blue:   #1A56DB;
+      --blue-l: #3B82F6;
+      --yellow: #F5A623;
+      --red:    #E63946;
+      --dark:   #0C0E1A;
+      --dark2:  #12152A;
+      --dark3:  #1A1E35;
+      --white:  #FFFFFF;
+      --muted:  #8892B0;
+    }
+
+    /* ── Utilities ────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+    .tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .tag-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
+    .tag-blue   { background: rgba(26,86,219,0.15);  color: var(--blue-l); }
+    .tag-red    { background: rgba(230,57,70,0.15);  color: var(--red); }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,14,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    nav .inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 180px;
+    }
+    nav .inner .nav-right { display: flex; justify-content: flex-end; }
+    .logo-img {
+      height: 160px; width: auto;
+      display: block;
+    }
+    .logo-text {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none;
+    }
+    .logo-text span { color: var(--yellow); }
+
+    /* ── Coming Soon Button ───────────────────────────── */
+    .nav-cta, .btn-primary, .cta-btn {
+      cursor: pointer; border: none; outline: none;
+    }
+    .nav-cta {
+      background: var(--yellow); color: #000;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 22px; border-radius: 8px;
+      text-decoration: none; transition: opacity .2s, background .2s;
+      display: inline-block;
+    }
+    .nav-cta:hover { opacity: .85; }
+    .nav-cta.coming { background: #333; color: #aaa; cursor: default; }
+
+    /* ── Hero ─────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      background: radial-gradient(ellipse 70% 60% at 60% 40%,
+        rgba(26,86,219,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 70%,
+        rgba(245,166,35,0.10) 0%, transparent 60%), var(--dark);
+      padding-top: 180px;
+    }
+    #hero .container {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center; padding-top: 80px; padding-bottom: 80px;
+    }
+    .hero-eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--yellow); margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.5px; margin-bottom: 24px;
+    }
+    h1 em { font-style: normal; color: var(--yellow); }
+    .hero-sub {
+      font-size: 18px; color: var(--muted);
+      margin-bottom: 36px; max-width: 440px; line-height: 1.7;
+    }
+    .btn-group { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--red); color: #fff;
+      font-size: 15px; font-weight: 700;
+      padding: 14px 30px; border-radius: 10px;
+      text-decoration: none; transition: transform .15s, opacity .15s, background .2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: .9; }
+    .btn-primary.coming { background: #333; color: #aaa; transform: none !important; cursor: default; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.07); color: var(--white);
+      font-size: 15px; font-weight: 600;
+      padding: 14px 30px; border-radius: 10px;
+      text-decoration: none; border: 1px solid rgba(255,255,255,0.12);
+      transition: background .2s; display: inline-block;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    /* Hero visual */
+    .hero-visual { display: flex; justify-content: center; align-items: center; }
+    .phone-mock {
+      width: 240px; height: 480px; background: var(--dark3);
+      border-radius: 36px; border: 2px solid rgba(255,255,255,0.10);
+      position: relative; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .phone-screen {
+      position: absolute; inset: 0; background: #0A0A0A;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 36px 20px 20px;
+    }
+    .mock-artwork {
+      width: 160px; height: 160px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--red) 100%);
+      border-radius: 16px; display: flex; align-items: center;
+      justify-content: center; font-size: 48px; margin-bottom: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+    .mock-title  { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; text-align: center; }
+    .mock-artist { font-size: 11px; color: #C8A951; margin-bottom: 14px; }
+    .mock-bar    { width: 100%; height: 3px; background: #2A2A2A; border-radius: 2px; margin-bottom: 12px; }
+    .mock-bar-fill { width: 45%; height: 100%; background: var(--yellow); border-radius: 2px; }
+    .mock-controls { display: flex; gap: 16px; align-items: center; }
+    .mock-btn { width: 36px; height: 36px; border-radius: 50%; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+    .mock-btn-play { background: var(--yellow); color: #000; font-size: 16px; }
+    .mock-btn-side { color: #555; font-size: 18px; }
+    .mock-tracks   { width: 100%; margin-top: 14px; }
+    .mock-track    { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #1A1A1A; font-size: 10px; color: #666; }
+    .mock-track.active { color: var(--yellow); }
+
+    /* ── Section Base ─────────────────────────────────── */
+    section { padding: 100px 0; }
+    section h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800; letter-spacing: -1px;
+      margin-bottom: 16px; line-height: 1.15;
+    }
+    section h2 em { font-style: normal; }
+    .section-lead { font-size: 18px; color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 56px; }
+
+    /* ── Problem ──────────────────────────────────────── */
+    #problem { background: var(--dark2); }
+    #problem h2 em { color: var(--red); }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+    .stat-card { background: var(--dark3); border-radius: 16px; padding: 32px 24px; border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .stat-card.c-red::before    { background: var(--red); }
+    .stat-card.c-yellow::before { background: var(--yellow); }
+    .stat-card.c-blue::before   { background: var(--blue-l); }
+    .stat-num { font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 8px; letter-spacing: -2px; }
+    .c-red    .stat-num { color: var(--red); }
+    .c-yellow .stat-num { color: var(--yellow); }
+    .c-blue   .stat-num { color: var(--blue-l); }
+    .stat-label { font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .problem-quote {
+      background: var(--dark3); border-left: 4px solid var(--red);
+      border-radius: 0 12px 12px 0; padding: 28px 32px;
+      font-size: 18px; color: #CCC; line-height: 1.7; font-style: italic;
+    }
+
+    /* ── Solution ─────────────────────────────────────── */
+    #solution { background: var(--dark); }
+    #solution h2 em { color: var(--blue-l); }
+    .solution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .solution-text p { color: var(--muted); font-size: 17px; line-height: 1.8; margin-bottom: 24px; }
+    .solution-text strong { color: var(--white); }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(26,86,219,0.15) 0%, rgba(245,166,35,0.08) 100%);
+      border: 1px solid rgba(26,86,219,0.3); border-radius: 16px; padding: 28px;
+    }
+    .highlight-box p { font-size: 17px; color: var(--white); line-height: 1.7; margin: 0; }
+    .highlight-box strong { color: var(--yellow); }
+
+    /* ── How it Works ─────────────────────────────────── */
+    #how { background: var(--dark2); }
+    #how h2 em { color: var(--yellow); }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .step { background: var(--dark3); border-radius: 20px; padding: 36px 28px; border: 1px solid rgba(255,255,255,0.06); }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; margin-bottom: 20px; }
+    .step:nth-child(1) .step-num { background: rgba(26,86,219,0.2);  color: var(--blue-l); }
+    .step:nth-child(2) .step-num { background: rgba(245,166,35,0.2); color: var(--yellow); }
+    .step:nth-child(3) .step-num { background: rgba(230,57,70,0.2);  color: var(--red); }
+    .step h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .step p  { font-size: 15px; color: var(--muted); line-height: 1.7; }
+    .step ul { list-style: none; margin-top: 12px; }
+    .step ul li { font-size: 14px; color: var(--muted); padding: 4px 0 4px 18px; position: relative; }
+    .step ul li::before { content: '→'; position: absolute; left: 0; color: var(--yellow); }
+
+    /* ── For Artists ──────────────────────────────────── */
+    #artists { background: var(--dark); }
+    #artists h2 em { color: var(--yellow); }
+    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .benefit { background: var(--dark3); border-radius: 16px; padding: 28px; border: 1px solid rgba(255,255,255,0.06); display: flex; gap: 18px; align-items: flex-start; }
+    .benefit-icon { width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+    .bi-blue   { background: rgba(26,86,219,0.15); }
+    .bi-yellow { background: rgba(245,166,35,0.15); }
+    .bi-red    { background: rgba(230,57,70,0.15); }
+    .benefit h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .benefit p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Format Comparison ────────────────────────────── */
+    #compare { background: var(--dark2); }
+    #compare h2 em { color: var(--yellow); }
+    .compare-table-wrap { overflow-x: auto; }
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      border-radius: 16px; overflow: hidden;
+      background: var(--dark3);
+    }
+    .compare-table th, .compare-table td {
+      padding: 18px 24px; text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 15px;
+    }
+    .compare-table th {
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding-top: 28px; padding-bottom: 22px;
+    }
+    .compare-table td:first-child,
+    .compare-table th:first-child {
+      text-align: left; color: var(--muted); font-weight: 600;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Column header colours */
+    .th-vinyl    { color: #C084FC; }   /* purple for vinyl */
+    .th-cassette { color: var(--blue-l); }
+    .th-cd       { color: var(--muted); }
+    .th-dt       { color: var(--yellow); background: rgba(245,166,35,0.07); }
+
+    /* DT column highlight */
+    .compare-table td.dt-col {
+      color: var(--yellow); font-weight: 700;
+      background: rgba(245,166,35,0.06);
+    }
+    .compare-table th.dt-col {
+      background: rgba(245,166,35,0.10);
+    }
+    .dt-badge {
+      display: inline-block;
+      background: var(--yellow); color: #000;
+      font-size: 9px; font-weight: 900;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 6px;
+      margin-left: 6px; vertical-align: middle;
+    }
+
+    /* Price row big numbers */
+    .price-cell {
+      font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+    }
+    .price-cell.dt-col { color: var(--yellow); font-size: 26px; }
+
+    /* ── For Fans ─────────────────────────────────────── */
+    #fans {
+      background: linear-gradient(135deg,
+        rgba(26,86,219,0.12) 0%, var(--dark2) 50%, rgba(245,166,35,0.08) 100%);
+    }
+    #fans h2 em { color: var(--blue-l); }
+    .fans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .fan-card { text-align: center; padding: 40px 24px; background: var(--dark3); border-radius: 20px; border: 1px solid rgba(255,255,255,0.06); }
+    .fan-emoji { font-size: 40px; margin-bottom: 16px; }
+    .fan-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .fan-card p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    #cta { background: var(--dark); text-align: center; padding: 120px 0; }
+    #cta h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px; }
+    #cta h2 em { color: var(--yellow); }
+    #cta p { font-size: 18px; color: var(--muted); margin-bottom: 40px; }
+    .cta-btn {
+      background: var(--red); color: #fff;
+      font-size: 18px; font-weight: 800;
+      padding: 18px 48px; border-radius: 12px;
+      text-decoration: none; display: inline-block;
+      transition: transform .15s, opacity .15s, background .2s;
+      letter-spacing: 0.3px;
+    }
+    .cta-btn:hover { transform: translateY(-3px); opacity: .9; }
+    .cta-btn.coming { background: #333; color: #aaa; transform: none !important; cursor: default; }
+
+    /* ── Coming Soon Toast ────────────────────────────── */
+    #cs-toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #1A1E35; color: var(--white);
+      padding: 14px 28px; border-radius: 12px;
+      font-size: 15px; font-weight: 600;
+      border: 1px solid rgba(245,166,35,0.4);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 999;
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      opacity: 0; pointer-events: none;
+    }
+    #cs-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #cs-toast span { color: var(--yellow); }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer { background: #080A14; border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 0; text-align: center; }
+    .footer-logo { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: 0.5; margin-bottom: 12px; }
+    footer p { font-size: 13px; color: #444; }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      #hero .container  { grid-template-columns: 1fr; }
+      .hero-visual      { display: none; }
+      .stat-grid        { grid-template-columns: 1fr; }
+      .solution-grid    { grid-template-columns: 1fr; }
+      .steps            { grid-template-columns: 1fr; }
+      .benefits-grid    { grid-template-columns: 1fr; }
+      .fans-grid        { grid-template-columns: 1fr; }
+      section           { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Coming Soon Toast ───────────────────────────────────────── -->
+<div id="cs-toast">🚀 <span>Coming Soon</span> — we'll notify you at launch!</div>
+
+<!-- ── Navbar ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="inner">
+    <a href="#">
+      <img src="logo-white.png" alt="Direktunes" class="logo-img" />
+    </a>
+    <div class="nav-right">
+      <button class="nav-cta cs-btn">Get Started</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">&#9834; For Independent Musicians</p>
+      <h1>Publish your music.<br><em>Own your revenue.</em></h1>
+      <p class="hero-sub">
+        Direktunes turns your album into a mobile app — sold directly to fans
+        on the App Store. No streaming. No monthly fees. 
+      </p>
+      <div class="btn-group">
+        <button class="btn-primary cs-btn">Get Started Free</button>
+        <a href="#solution" class="btn-secondary">Learn More</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone-mock">
+        <div class="phone-screen">
+          <div class="mock-artwork">🎵</div>
+          <div class="mock-title">Musica qualunque</div>
+          <div class="mock-artist">Miskia · 2026</div>
+          <div class="mock-bar"><div class="mock-bar-fill"></div></div>
+          <div class="mock-controls">
+            <div class="mock-btn mock-btn-side">⏮</div>
+            <div class="mock-btn mock-btn-play">▶</div>
+            <div class="mock-btn mock-btn-side">⏭</div>
+          </div>
+          <div class="mock-tracks">
+            <div class="mock-track active"><span>♪ E la tristezza</span><span>2:44</span></div>
+            <div class="mock-track"><span>No fèmena</span><span>2:31</span></div>
+            <div class="mock-track"><span>Parlami di te</span><span>2:07</span></div>
+            <div class="mock-track"><span>Parchè ti va</span><span>3:53</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Problem ──────────────────────────────────────────────────── -->
+<section id="problem">
+  <div class="container">
+    <span class="tag tag-red">The Problem</span>
+    <h2>Streaming pays <em>almost nothing.</em></h2>
+    <p class="section-lead">
+      Millions of streams on Apple Music or Spotify do not translate to a sustainable
+      income for independent artists. They are forced to rely on live performances
+      and merchandise just to survive.
+    </p>
+    <div class="stat-grid">
+      <div class="stat-card c-red">
+        <div class="stat-num">$0.003</div>
+        <div class="stat-label">Average payout per stream on major platforms</div>
+      </div>
+      <div class="stat-card c-yellow">
+        <div class="stat-num">1M+</div>
+        <div class="stat-label">Streams needed just to earn minimum wage</div>
+      </div>
+      <div class="stat-card c-blue">
+        <div class="stat-num">0%</div>
+        <div class="stat-label">Subscription revenue going directly to your fans</div>
+      </div>
+    </div>
+    <div class="problem-quote">
+      "Independent musicians need a new way to distribute music worldwide —
+      independently — with a mechanism to actually charge their fans."
+    </div>
+  </div>
+</section>
+
+<!-- ── Solution ─────────────────────────────────────────────────── -->
+<section id="solution">
+  <div class="container">
+    <span class="tag tag-blue">The Solution</span>
+    <h2>Meet <em>Direktunes.</em></h2>
+    <div class="solution-grid">
+      <div class="solution-text">
+        <p>
+          <strong>Direktunes is an AI-based assistant</strong> for independent musicians
+          who want to publish their music in a digital format for mobile phones —
+          without streaming and without monthly fees.
+        </p>
+        <p>
+          We pack your album as a <strong>native mobile app</strong> containing your
+          songs, artwork, lyrics, notes and credits. Fans purchase it once,
+          directly from the App Store, and they will be free to play your music anytime, even when not on wifi. 
+        </p>
+        <p>
+          Available on both <strong>Apple App Store</strong> and
+          <strong>Google Play Store</strong>, your music reaches fans worldwide
+          while you keep full control over your catalogue and your earnings.
+        </p>
+      </div>
+      <div>
+        <div class="highlight-box">
+          <p>
+            Your album becomes an app. Fans download it, pay once with
+            <strong>Apple Pay or Google Pay</strong>, and enjoy your music anytime —
+            no subscription, no algorithm, no middleman.<br><br>
+            <strong>You set the price. You receive the earnings.</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it Works ──────────────────────────────────────────────── -->
+<section id="how">
+  <div class="container">
+    <span class="tag tag-yellow">How It Works</span>
+    <h2>Three steps to <em>launch.</em></h2>
+    <p class="section-lead">Our AI handles everything. You focus on the music.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Submit Your Album</h3>
+        <p>Share your content with Direktunes and we take care of the rest.</p>
+        <ul>
+          <li>Music files (MP3/AAC)</li>
+          <li>Album cover artwork</li>
+          <li>Lyrics, notes &amp; credits</li>
+          <li>Your desired price</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We Build the App</h3>
+        <p>Our AI automatically creates a polished, native mobile app with your music, artwork, lyrics and full playback controls.</p>
+        <ul>
+          <li>iOS &amp; Android apps</li>
+          <li>Lyrics display</li>
+          <li>Professional music player</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Publish &amp; Earn</h3>
+        <p>We publish your app to both stores and send you the links and QR codes that you can share with fans.</p>
+        <ul>
+          <li>Apple App Store</li>
+          <li>Google Play Store</li>
+          <li>QR code for live shows</li>
+          <li>Earnings go directly to you</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── For Artists ───────────────────────────────────────────────── -->
+<section id="artists">
+  <div class="container">
+    <span class="tag tag-yellow">For Musicians</span>
+    <h2>Everything you need.<br><em>Nothing you don't.</em></h2>
+    <p class="section-lead">
+      Direktunes gives independent artists a real alternative to the streaming economy.
+    </p>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <div class="benefit-icon bi-yellow">💰</div>
+        <div>
+          <h4>Keep Your Revenue</h4>
+          <p>Fans pay once to have your album. Earnings go directly to you through the app store payout system.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon bi-blue">🌍</div>
+        <div>
+          <h4>Worldwide Distribution</h4>
+          <p>Reach fans everywhere through Apple App Store and Google Play — without a label or distributor.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon bi-red">🤖</div>
+        <div>
+          <h4>AI-Powered, Fully Automated</h4>
+          <p>No technical knowledge required. Our AI builds and submits the app for you, start to finish.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon bi-yellow">📱</div>
+        <div>
+          <h4>Professional Mobile App</h4>
+          <p>Full music player, album artwork, lyrics, artist notes and credits — all beautifully packaged.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon bi-blue">🔗</div>
+        <div>
+          <h4>QR Codes for display at your Live Shows</h4>
+          <p>We provide shareable links and QR codes to promote your app at concerts, on social media and your website.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon bi-red">🚫</div>
+        <div>
+          <h4>No Streaming. No Subscriptions.</h4>
+          <p>Your fans get your music. No algorithms deciding who hears your songs. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Format Comparison ─────────────────────────────────────────── -->
+<section id="compare">
+  <div class="container">
+    <span class="tag tag-yellow">Why Direktunes</span>
+    <h2>The new format for<br><em>the digital era.</em></h2>
+    <p class="section-lead">
+      Music has evolved from vinyl to cassette to CD. Direktunes is the next step —
+      an album you can buy and play on any mobile phone anytime, anywhere in the world.
+    </p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="th-vinyl">🎙 Vinyl</th>
+            <th class="th-cassette">📼 Cassette</th>
+            <th class="th-cd">💿 CD</th>
+            <th class="th-dt dt-col">📱 Direktunes <span class="dt-badge">New</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What's inside</td>
+            <td>Songs, lyrics,<br>notes, credits</td>
+            <td>Songs, lyrics,<br>notes, credits</td>
+            <td>Songs, lyrics,<br>notes, credits</td>
+            <td class="dt-col">Songs, lyrics,<br>notes, credits</td>
+          </tr>
+          <tr>
+            <td>Where to buy</td>
+            <td>Shop / e-platform</td>
+            <td>Shop / e-platform</td>
+            <td>Shop / e-platform</td>
+            <td class="dt-col">App Store</td>
+          </tr>
+          <tr>
+            <td>Price</td>
+            <td><span class="price-cell">$30*</span></td>
+            <td><span class="price-cell">$15*</span></td>
+            <td><span class="price-cell">$15*</span></td>
+            <td class="dt-col"><span class="price-cell dt-col">$7*</span></td>
+          </tr>
+          <tr>
+            <td>How to play</td>
+            <td>Turntable</td>
+            <td>Cassette player</td>
+            <td>CD player</td>
+            <td class="dt-col">📱 Mobile phone</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── For Fans ──────────────────────────────────────────────────── -->
+<section id="fans">
+  <div class="container">
+    <span class="tag tag-blue">For Fans</span>
+    <h2>Music the way it<br><em>should be.</em></h2>
+    <p class="section-lead">Simple, beautiful and yours forever.</p>
+    <div class="fans-grid">
+      <div class="fan-card">
+        <div class="fan-emoji">📲</div>
+        <h3>Download the App</h3>
+        <p>Find your favourite artist's album on the App Store or Google Play and download it in seconds.</p>
+      </div>
+      <div class="fan-card">
+        <div class="fan-emoji">💳</div>
+        <h3>Pay Once</h3>
+        <p>Purchase with Apple Pay or Google Pay. One payment — no subscriptions, no renewals, no surprises.</p>
+      </div>
+      <div class="fan-card">
+        <div class="fan-emoji">🎧</div>
+        <h3>With you anytime and anywhere</h3>
+        <p>Enjoy the music anytime, with lyrics, beautiful artwork and full offline playback. </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────────────── -->
+<section id="cta">
+  <div class="container">
+    <span class="tag tag-yellow">Ready to launch?</span>
+    <h2>Turn your album into<br><em>your own app.</em></h2>
+    <p>Join independent musicians already publishing with Direktunes.</p>
+    <button class="cta-btn cs-btn">Get Started Today</button>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <img src="logo.png" alt="Direktunes" class="footer-logo" />
+    <p>&copy; 2026 Direktunes. All rights reserved. &nbsp;|&nbsp; direktunes.com</p>
+  </div>
+</footer>
+
+<!-- ── Coming Soon Logic ─────────────────────────────────────────── -->
+<script>
+  const toast = document.getElementById('cs-toast');
+  let toastTimer;
+
+  function showToast() {
+    clearTimeout(toastTimer);
+    toast.classList.add('show');
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  document.querySelectorAll('.cs-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      this.textContent = 'COMING SOON';
+      this.classList.add('coming');
+      showToast();
+      // Reset button text after toast disappears
+      const orig = this.dataset.orig || this.textContent;
+      if (!this.dataset.orig) this.dataset.orig = orig;
+      setTimeout(() => {
+        this.textContent = this.dataset.orig || 'Get Started';
+        this.classList.remove('coming');
+      }, 4000);
+    });
+  });
+
+  // Store original text before any clicks
+  document.querySelectorAll('.cs-btn').forEach(btn => {
+    btn.dataset.orig = btn.textContent.trim();
+  });
+</script>
+
+</body>
+</html>

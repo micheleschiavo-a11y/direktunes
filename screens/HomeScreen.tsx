@@ -76,7 +76,7 @@ export default function HomeScreen() {
         >
           <Text style={[styles.shuffleBtnIcon, isShuffled && { color: ACCENT }]}>⇌</Text>
           <Text style={[styles.shuffleBtnLabel, isShuffled && { color: ACCENT }]}>
-            {isShuffled ? 'Casuale On' : 'Casuale'}
+            {isShuffled ? 'Shuffle On' : 'Shuffle'}
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Direktunes",
+    "name": "Miskia",
     "slug": "direktunes",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,8 +17,10 @@
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
-        ]
-      }
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "3"
     },
     "android": {
       "package": "com.direktunes.musicaqualunque",
@@ -31,24 +33,21 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS"
-      ]
+      ],
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [
-        "expo-av",
-        {
-          "microphonePermission": false
-        }
-      ]
+      "expo-audio"
     ],
     "extra": {
       "eas": {
         "projectId": "733a4035-d051-4be8-a1ef-4cfc6160f347"
       }
     },
-    "owner": "micheleschiavo"
+    "owner": "micheleschiavo",
+    "newArchEnabled": false
   }
 }

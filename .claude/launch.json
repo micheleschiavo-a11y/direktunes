@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "landing-page",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["-e", "require('http').createServer((req,res)=>{const fs=require('fs'),path=require('path');let f=path.join('C:/Users/miche/Documents/Michele/Direktunes/store',req.url==='/'?'index.html':req.url);fs.readFile(f,(e,d)=>{if(e){res.writeHead(404);res.end();}else{const ext=path.extname(f);const ct={'html':'text/html','css':'text/css','js':'text/javascript','png':'image/png','jpg':'image/jpeg'}[ext.slice(1)]||'application/octet-stream';res.writeHead(200,{'Content-Type':ct});res.end(d);}});}).listen(3000,()=>console.log('ok'))"],
+      "port": 3000
+    },
+    {
+      "name": "expo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 8081
+    },
+    {
+      "name": "la-ruota-web",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["-e", "require('http').createServer((req,res)=>{const fs=require('fs'),path=require('path');let f=path.join('C:/Users/miche/Documents/Michele/la-ruota/dist',req.url==='/'?'index.html':req.url);fs.readFile(f,(e,d)=>{if(e){res.writeHead(404);res.end();}else{const ext=path.extname(f);const ct={'html':'text/html','css':'text/css','js':'text/javascript','png':'image/png','ico':'image/x-icon','json':'application/json'}[ext.slice(1)]||'application/octet-stream';res.writeHead(200,{'Content-Type':ct});res.end(d);}});}).listen(3002,()=>console.log('ok'))"],
+      "port": 3002
+    }
+  ]
+}
