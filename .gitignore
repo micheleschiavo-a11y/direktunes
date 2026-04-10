@@ -45,3 +45,8 @@ yarn-error.*
 
 # Google Play credentials
 google-play-key.json
+
+# Build artifacts — never commit AABs/APKs to git
+Builds/
+*.aab
+*.apk
