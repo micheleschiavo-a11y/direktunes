@@ -1,0 +1,153 @@
+const { withDangerousMod, withProjectBuildGradle, withGradleProperties } = require('@expo/config-plugins');
+const fs = require('fs');
+const path = require('path');
+
+// Add JitPack repository so react-native-track-player's kotlinaudio dependency resolves
+function withJitpack(config) {
+  return withProjectBuildGradle(config, (config) => {
+    if (!config.modResults.contents.includes('jitpack.io')) {
+      config.modResults.contents = config.modResults.contents.replace(
+        /allprojects\s*\{[\s\S]*?repositories\s*\{/,
+        (match) => match + '\n        maven { url "https://jitpack.io" }'
+      );
+    }
+    return config;
+  });
+}
+
+// Force new architecture OFF — react-native-track-player does not support new arch.
+// Expo SDK 55 ignores the app.json "newArchEnabled" key and defaults to true,
+// so we must override it here in gradle.properties directly.
+function withOldArch(config) {
+  return withGradleProperties(config, (config) => {
+    config.modResults = config.modResults.filter(
+      (item) => item.key !== 'newArchEnabled'
+    );
+    config.modResults.push({ type: 'property', key: 'newArchEnabled', value: 'false' });
+    return config;
+  });
+}
+
+// Downgrade Gradle from 9.0.0 to 8.14.2.
+// foojay-resolver-convention 0.5.0 (bundled in @react-native/gradle-plugin) is
+// incompatible with Gradle 9 — it references JvmVendorSpec.IBM_SEMERU which was
+// removed in Gradle 9. Gradle 8.x is fully supported by RN 0.83.
+function withGradle8(config) {
+  return withDangerousMod(config, [
+    'android',
+    async (config) => {
+      const wrapperPropsPath = path.join(
+        config.modRequest.platformProjectRoot,
+        'gradle/wrapper/gradle-wrapper.properties'
+      );
+      if (fs.existsSync(wrapperPropsPath)) {
+        let contents = fs.readFileSync(wrapperPropsPath, 'utf8');
+        contents = contents.replace(
+          /distributionUrl=.*gradle-.*\.zip/,
+          'distributionUrl=https\\://services.gradle.org/distributions/gradle-8.14.2-bin.zip'
+        );
+        fs.writeFileSync(wrapperPropsPath, contents);
+      }
+      return config;
+    },
+  ]);
+}
+
+// Fix react-native-track-player MusicModule.kt compilation errors on Kotlin 2.1+.
+// originalItem is Bundle? but Arguments.fromBundle() expects Bundle (non-null).
+// Kotlin 2.1.20 enforces this strictly. Add ?: Bundle() null-safe fallback.
+// patch-package also applies this fix, but this ensures it runs even if
+// postinstall is skipped in the EAS build environment.
+function withRntpFix(config) {
+  return withDangerousMod(config, [
+    'android',
+    async (config) => {
+      const musicModulePath = path.join(
+        config.modRequest.projectRoot,
+        'node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt'
+      );
+      if (fs.existsSync(musicModulePath)) {
+        let contents = fs.readFileSync(musicModulePath, 'utf8');
+        let changed = false;
+        if (contents.includes('Arguments.fromBundle(musicService.tracks[index].originalItem)')) {
+          contents = contents.replace(
+            'Arguments.fromBundle(musicService.tracks[index].originalItem)',
+            'Arguments.fromBundle(musicService.tracks[index].originalItem ?: Bundle())'
+          );
+          changed = true;
+        }
+        if (contents.includes('musicService.tracks[musicService.getCurrentTrackIndex()].originalItem\n')) {
+          contents = contents.replace(
+            'musicService.tracks[musicService.getCurrentTrackIndex()].originalItem\n',
+            'musicService.tracks[musicService.getCurrentTrackIndex()].originalItem ?: Bundle()\n'
+          );
+          changed = true;
+        }
+        if (changed) {
+          fs.writeFileSync(musicModulePath, contents);
+        }
+      }
+      return config;
+    },
+  ]);
+}
+
+// Add ProGuard/R8 keep rules for react-native-track-player.
+// RNTP's own proguard-rules.txt has no -keep directives, so R8 in a release
+// AAB build strips and renames com.doublesymmetry.** classes, breaking the
+// JS-to-native bridge and causing an immediate launch crash.
+function withProguardRules(config) {
+  return withDangerousMod(config, [
+    'android',
+    async (config) => {
+      const proguardPath = path.join(
+        config.modRequest.platformProjectRoot,
+        'app/proguard-rules.pro'
+      );
+      const rules = `
+# react-native-track-player — keep native module classes visible to R8
+-keep class com.doublesymmetry.** { *; }
+-dontwarn com.doublesymmetry.**
+-keep class com.github.doublesymmetry.** { *; }
+-dontwarn com.github.doublesymmetry.**
+`;
+      if (fs.existsSync(proguardPath)) {
+        const existing = fs.readFileSync(proguardPath, 'utf8');
+        if (!existing.includes('com.doublesymmetry')) {
+          fs.appendFileSync(proguardPath, rules);
+        }
+      }
+      return config;
+    },
+  ]);
+}
+
+function withAdiRegistration(config) {
+  return withDangerousMod(config, [
+    'android',
+    async (config) => {
+      const assetsDir = path.join(
+        config.modRequest.platformProjectRoot,
+        'app/src/main/assets'
+      );
+      if (!fs.existsSync(assetsDir)) {
+        fs.mkdirSync(assetsDir, { recursive: true });
+      }
+      fs.copyFileSync(
+        path.join(config.modRequest.projectRoot, 'assets/adi-registration.properties'),
+        path.join(assetsDir, 'adi-registration.properties')
+      );
+      return config;
+    },
+  ]);
+}
+
+module.exports = function withPlugins(config) {
+  config = withJitpack(config);
+  config = withOldArch(config);
+  config = withGradle8(config);
+  config = withRntpFix(config);
+  config = withProguardRules(config);
+  config = withAdiRegistration(config);
+  return config;
+};

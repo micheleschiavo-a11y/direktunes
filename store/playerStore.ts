@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
-import type { AudioPlayer, AudioStatus } from 'expo-audio';
-import { TRACKS } from '../data/tracks';
+import TrackPlayer, { Capability } from 'react-native-track-player';
+import type { Track as RNTPTrack } from 'react-native-track-player';
+import { TRACKS, ALBUM } from '../data/tracks';
 
 export type Screen = 'home' | 'lyrics' | 'notes' | 'credits';
 
@@ -14,10 +14,11 @@ interface PlayerStore {
   currentTrackIndex: number;
   isPlaying: boolean;
   isShuffled: boolean;
-  position: number;  // seconds
-  duration: number;  // seconds
-  sound: AudioPlayer | null;
+  position: number;   // seconds
+  duration: number;   // seconds
+  isReady: boolean;   // true after first loadAndPlayTrack
   shuffleOrder: number[];
+  playerSetupError: string | null;
 
   // Actions
   initAudio: () => Promise<void>;
@@ -40,14 +41,16 @@ function generateShuffleOrder(length: number, current: number): number[] {
   return [current, ...arr];
 }
 
-// Track the current status subscription outside the store
-let currentSubscription: { remove: () => void } | null = null;
-
-function clearSubscription() {
-  if (currentSubscription) {
-    currentSubscription.remove();
-    currentSubscription = null;
-  }
+function buildRntpTracks(indices: number[]): RNTPTrack[] {
+  return indices.map(i => ({
+    id: String(TRACKS[i].id),
+    url: TRACKS[i].file,
+    title: TRACKS[i].title,
+    artist: TRACKS[i].artist,
+    album: ALBUM.title,
+    artwork: ALBUM.artwork,
+    duration: TRACKS[i].duration,
+  }));
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -59,70 +62,89 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   isShuffled: false,
   position: 0,
   duration: 0,
-  sound: null,
+  isReady: false,
   shuffleOrder: Array.from({ length: TRACKS.length }, (_, i) => i),
+  playerSetupError: null,
 
   initAudio: async () => {
-    await setAudioModeAsync({
-      playsInSilentMode: true,
-      shouldPlayInBackground: true,
-    });
+    try {
+      await TrackPlayer.setupPlayer();
+    } catch (e: unknown) {
+      // setupPlayer() throws if the player is already initialized (hot reload).
+      // That is safe to ignore. Any other error is a real failure — surface it.
+      const message = e instanceof Error ? e.message : String(e);
+      const isAlreadyInitialized =
+        message.includes('already been initialized') ||
+        message.includes('already initialized');
+      if (!isAlreadyInitialized) {
+        console.error('[initAudio] TrackPlayer.setupPlayer() failed:', e);
+        set({ playerSetupError: message });
+        return; // do NOT call updateOptions on a broken player
+      }
+    }
+    try {
+      await TrackPlayer.updateOptions({
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+          Capability.SeekTo,
+        ],
+        compactCapabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+        ],
+      });
+      // Pre-load queue so the OS media session is ready
+      const queue = await TrackPlayer.getQueue();
+      if (queue.length === 0) {
+        await TrackPlayer.add(
+          buildRntpTracks(Array.from({ length: TRACKS.length }, (_, i) => i))
+        );
+      }
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      console.error('[initAudio] post-setup configuration failed:', e);
+      set({ playerSetupError: message });
+    }
   },
 
   loadAndPlayTrack: async (index: number) => {
-    const { sound: prevSound } = get();
-    clearSubscription();
-    if (prevSound) {
-      prevSound.pause();
-      prevSound.remove();
+    const { isShuffled } = get();
+    let orderedIndices: number[];
+
+    if (isShuffled) {
+      const newOrder = generateShuffleOrder(TRACKS.length, index);
+      set({ shuffleOrder: newOrder });
+      orderedIndices = newOrder;
+    } else {
+      // Linear order starting at index, wrapping around
+      orderedIndices = Array.from(
+        { length: TRACKS.length },
+        (_, i) => (index + i) % TRACKS.length
+      );
     }
 
-    const track = TRACKS[index];
-    const player = createAudioPlayer(track.file, 100);
+    await TrackPlayer.reset();
+    await TrackPlayer.add(buildRntpTracks(orderedIndices));
+    await TrackPlayer.play();
 
-    set({
-      sound: player,
-      currentTrackIndex: index,
-      isPlaying: true,
-      position: 0,
-    });
-
-    let playStarted = false;
-
-    currentSubscription = player.addListener('playbackStatusUpdate', (status: AudioStatus) => {
-      // Start playback once the audio is loaded
-      if (status.isLoaded && !playStarted) {
-        playStarted = true;
-        player.play();
-      }
-
-      // Keep UI in sync
-      usePlayerStore.setState({
-        position: status.currentTime,
-        duration: status.duration,
-        isPlaying: status.playing,
-      });
-
-      // Auto-advance to next track
-      if (status.didJustFinish) {
-        clearSubscription();
-        usePlayerStore.setState({ isPlaying: false });
-        usePlayerStore.getState().skipNext();
-      }
-    });
+    set({ currentTrackIndex: index, isPlaying: true, isReady: true, position: 0 });
   },
 
   togglePlay: async () => {
-    const { sound, isPlaying, currentTrackIndex } = get();
-    if (!sound) {
+    const { isReady, isPlaying, currentTrackIndex } = get();
+    if (!isReady) {
       await get().loadAndPlayTrack(currentTrackIndex);
       return;
     }
     if (isPlaying) {
-      sound.pause();
+      await TrackPlayer.pause();
       set({ isPlaying: false });
     } else {
-      sound.play();
+      await TrackPlayer.play();
       set({ isPlaying: true });
     }
   },
@@ -153,11 +175,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   skipPrev: async () => {
     const { position } = get();
     if (position > 3) {
-      const { sound } = get();
-      if (sound) {
-        sound.seekTo(0);
-        set({ position: 0 });
-      }
+      await TrackPlayer.seekTo(0);
+      set({ position: 0 });
     } else {
       const prevIndex = get()._getPrevIndex();
       await get().loadAndPlayTrack(prevIndex);
@@ -165,20 +184,31 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
 
   toggleShuffle: () => {
-    const { isShuffled, currentTrackIndex } = get();
+    const { isShuffled, currentTrackIndex, isReady } = get();
     if (!isShuffled) {
       const order = generateShuffleOrder(TRACKS.length, currentTrackIndex);
       set({ isShuffled: true, shuffleOrder: order });
+      if (isReady) {
+        TrackPlayer.reset()
+          .then(() => TrackPlayer.add(buildRntpTracks(order)))
+          .then(() => TrackPlayer.play());
+      }
     } else {
       set({ isShuffled: false });
+      if (isReady) {
+        const linearOrder = Array.from(
+          { length: TRACKS.length },
+          (_, i) => (currentTrackIndex + i) % TRACKS.length
+        );
+        TrackPlayer.reset()
+          .then(() => TrackPlayer.add(buildRntpTracks(linearOrder)))
+          .then(() => TrackPlayer.play());
+      }
     }
   },
 
   seek: (seconds: number) => {
-    const { sound } = get();
-    if (sound) {
-      sound.seekTo(seconds);
-      set({ position: seconds });
-    }
+    TrackPlayer.seekTo(seconds);
+    set({ position: seconds });
   },
 }));
