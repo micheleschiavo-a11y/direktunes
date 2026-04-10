@@ -53,11 +53,47 @@ function withGradle8(config) {
   ]);
 }
 
-// Fix react-native-track-player MusicModule.kt compilation errors on Kotlin 2.1+.
-// originalItem is Bundle? but Arguments.fromBundle() expects Bundle (non-null).
-// Kotlin 2.1.20 enforces this strictly. Add ?: Bundle() null-safe fallback.
-// patch-package also applies this fix, but this ensures it runs even if
-// postinstall is skipped in the EAS build environment.
+// Fix react-native-track-player MusicModule.kt for React Native 0.83 compatibility.
+//
+// Fix 1 — Kotlin 2.1+ null-safety: Arguments.fromBundle() rejects null Bundle.
+// Fix 2 — TurboModule interop crash: functions written as Kotlin expression bodies
+//   (fun foo() = scope.launch { }) have JVM return type Job instead of void.
+//   RN 0.83's TurboModuleInteropUtils rejects any async @ReactMethod with a non-void
+//   return type, crashing the JS runtime before the app renders. Converting to block
+//   bodies (fun foo() { scope.launch { } }) makes the return type Unit (void).
+function fixScopeLaunchBodies(contents) {
+  const lines = contents.split('\n');
+  const result = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.includes(') = scope.launch {')) {
+      // Convert expression body to block body so JVM return type is Unit, not Job
+      result.push(line.replace(') = scope.launch {', ') { scope.launch {'));
+      i++;
+      // Count braces to find the matching closing } of the scope.launch block
+      let braceCount = 1;
+      while (i < lines.length && braceCount > 0) {
+        const bodyLine = lines[i];
+        for (let j = 0; j < bodyLine.length; j++) {
+          if (bodyLine[j] === '{') braceCount++;
+          if (bodyLine[j] === '}') braceCount--;
+        }
+        if (braceCount === 0) {
+          result.push(bodyLine + ' }'); // close the outer function body
+        } else {
+          result.push(bodyLine);
+        }
+        i++;
+      }
+    } else {
+      result.push(line);
+      i++;
+    }
+  }
+  return result.join('\n');
+}
+
 function withRntpFix(config) {
   return withDangerousMod(config, [
     'android',
@@ -69,6 +105,8 @@ function withRntpFix(config) {
       if (fs.existsSync(musicModulePath)) {
         let contents = fs.readFileSync(musicModulePath, 'utf8');
         let changed = false;
+
+        // Fix 1: Kotlin null-safety for Arguments.fromBundle
         if (contents.includes('Arguments.fromBundle(musicService.tracks[index].originalItem)')) {
           contents = contents.replace(
             'Arguments.fromBundle(musicService.tracks[index].originalItem)',
@@ -83,6 +121,13 @@ function withRntpFix(config) {
           );
           changed = true;
         }
+
+        // Fix 2: Convert expression bodies to block bodies so @ReactMethod return type is void
+        if (contents.includes(') = scope.launch {')) {
+          contents = fixScopeLaunchBodies(contents);
+          changed = true;
+        }
+
         if (changed) {
           fs.writeFileSync(musicModulePath, contents);
         }
