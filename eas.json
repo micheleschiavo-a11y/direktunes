@@ -4,6 +4,11 @@
     "appVersionSource": "local"
   },
   "build": {
+    "verify": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
@@ -16,6 +21,13 @@
     },
     "production": {
       "autoIncrement": true,
+      "cache": {
+        "key": "gradle-v1",
+        "paths": [
+          "~/.gradle/caches",
+          "~/.gradle/wrapper/dists"
+        ]
+      },
       "ios": {
         "buildConfiguration": "Release"
       },
