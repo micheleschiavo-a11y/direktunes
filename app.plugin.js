@@ -179,12 +179,12 @@ function withRntpFix(config) {
         return try {
             @Suppress("DEPRECATION")
             reactNativeHost.reactInstanceManager.currentReactContext
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             try {
                 (application as? com.facebook.react.ReactApplication)
                     ?.reactHost
                     ?.getCurrentReactContext()
-            } catch (_: Exception) {
+            } catch (e2: Exception) {
                 null
             }
         }
