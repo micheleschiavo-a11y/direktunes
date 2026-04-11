@@ -156,6 +156,49 @@ function withRntpFix(config) {
           fs.writeFileSync(musicModulePath, contents);
         }
       }
+
+      // Fix 3: MusicService.emit() calls reactNativeHost which throws in Expo SDK 55
+      // bridgeless mode. Replace with a getReactContext() helper that falls back to
+      // the new-arch ReactHost API.
+      const musicServicePath = path.join(
+        config.modRequest.projectRoot,
+        'node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/service/MusicService.kt'
+      );
+      if (fs.existsSync(musicServicePath)) {
+        let svc = fs.readFileSync(musicServicePath, 'utf8');
+        if (svc.includes('reactNativeHost.reactInstanceManager.currentReactContext')) {
+          // Replace both occurrences in emit() and emitList()
+          svc = svc.replace(
+            /reactNativeHost\.reactInstanceManager\.currentReactContext/g,
+            'getReactContext()'
+          );
+          // Insert getReactContext() helper before getTaskConfig
+          const helper = `    // Returns the current React context, compatible with both old and new (bridgeless) architecture.
+    // In Expo SDK 55 / RN 0.83, reactNativeHost throws in bridgeless mode; fall back to reactHost.
+    private fun getReactContext(): com.facebook.react.bridge.ReactContext? {
+        return try {
+            @Suppress("DEPRECATION")
+            reactNativeHost.reactInstanceManager.currentReactContext
+        } catch (_: Exception) {
+            try {
+                (application as? com.facebook.react.ReactApplication)
+                    ?.reactHost
+                    ?.getCurrentReactContext()
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
+
+    `;
+          svc = svc.replace(
+            '    override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig {',
+            helper + '    override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig {'
+          );
+          fs.writeFileSync(musicServicePath, svc);
+        }
+      }
+
       return config;
     },
   ]);
