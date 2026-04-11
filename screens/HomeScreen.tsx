@@ -57,7 +57,7 @@ export default function HomeScreen() {
         <TouchableOpacity
           style={[styles.mainBtn, styles.playBtn]}
           onPress={async () => {
-            if (!usePlayerStore.getState().sound) {
+            if (!usePlayerStore.getState().isReady) {
               await loadAndPlayTrack(currentTrackIndex);
             } else {
               await togglePlay();

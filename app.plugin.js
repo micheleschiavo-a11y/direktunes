@@ -68,7 +68,8 @@ function fixScopeLaunchBodies(contents) {
   while (i < lines.length) {
     const line = lines[i];
     if (line.includes(') = scope.launch {')) {
-      // Convert expression body to block body so JVM return type is Unit, not Job
+      // Single-line expression body: fun foo() = scope.launch { ... }
+      // Convert to block body so JVM return type is Unit, not Job
       result.push(line.replace(') = scope.launch {', ') { scope.launch {'));
       i++;
       // Count braces to find the matching closing } of the scope.launch block
@@ -81,6 +82,29 @@ function fixScopeLaunchBodies(contents) {
         }
         if (braceCount === 0) {
           result.push(bodyLine + ' }'); // close the outer function body
+        } else {
+          result.push(bodyLine);
+        }
+        i++;
+      }
+    } else if (line.trimEnd().endsWith(') =') && lines[i + 1]?.trimStart().startsWith('scope.launch {')) {
+      // Two-line expression body:
+      //   fun foo(...) =
+      //       scope.launch { ... }
+      // Replace trailing '=' with '{' to make it a block body
+      result.push(line.replace(/\s*=\s*$/, ' {'));
+      i++;
+      result.push(lines[i]); // push 'scope.launch {' line unchanged
+      i++;
+      let braceCount = 1;
+      while (i < lines.length && braceCount > 0) {
+        const bodyLine = lines[i];
+        for (let j = 0; j < bodyLine.length; j++) {
+          if (bodyLine[j] === '{') braceCount++;
+          if (bodyLine[j] === '}') braceCount--;
+        }
+        if (braceCount === 0) {
+          result.push(bodyLine + ' }'); // close scope.launch block + outer function body
         } else {
           result.push(bodyLine);
         }
@@ -123,7 +147,7 @@ function withRntpFix(config) {
         }
 
         // Fix 2: Convert expression bodies to block bodies so @ReactMethod return type is void
-        if (contents.includes(') = scope.launch {')) {
+        if (contents.includes(') = scope.launch {') || /\) =\s*\n\s*scope\.launch\s*\{/.test(contents)) {
           contents = fixScopeLaunchBodies(contents);
           changed = true;
         }

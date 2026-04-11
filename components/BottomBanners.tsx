@@ -19,7 +19,7 @@ export default function BottomBanners() {
   const {
     currentTrackIndex,
     isPlaying,
-    sound,
+    isReady,
     activeScreen,
     navigate,
     togglePlay,
@@ -39,7 +39,7 @@ export default function BottomBanners() {
   const handleSongNamePress = () => navigate('lyrics');
 
   const handlePlayPress = async () => {
-    if (!sound) {
+    if (!isReady) {
       await loadAndPlayTrack(currentTrackIndex);
     } else {
       await togglePlay();
