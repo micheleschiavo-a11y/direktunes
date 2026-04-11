@@ -183,7 +183,7 @@ function withRntpFix(config) {
             try {
                 (application as? com.facebook.react.ReactApplication)
                     ?.reactHost
-                    ?.getCurrentReactContext()
+                    ?.currentReactContext
             } catch (e2: Exception) {
                 null
             }
