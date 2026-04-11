@@ -158,7 +158,7 @@ function withRntpFix(config) {
       }
 
       // Fix 3: MusicService.emit() calls reactNativeHost which throws in Expo SDK 55
-      // bridgeless mode. Replace with a getReactContext() helper that falls back to
+      // bridgeless mode. Replace with a resolveReactContext() helper that falls back to
       // the new-arch ReactHost API.
       const musicServicePath = path.join(
         config.modRequest.projectRoot,
@@ -170,12 +170,12 @@ function withRntpFix(config) {
           // Replace both occurrences in emit() and emitList()
           svc = svc.replace(
             /reactNativeHost\.reactInstanceManager\.currentReactContext/g,
-            'getReactContext()'
+            'resolveReactContext()'
           );
-          // Insert getReactContext() helper before getTaskConfig
+          // Insert resolveReactContext() helper before getTaskConfig
           const helper = `    // Returns the current React context, compatible with both old and new (bridgeless) architecture.
     // In Expo SDK 55 / RN 0.83, reactNativeHost throws in bridgeless mode; fall back to reactHost.
-    private fun getReactContext(): com.facebook.react.bridge.ReactContext? {
+    private fun resolveReactContext(): com.facebook.react.bridge.ReactContext? {
         return try {
             @Suppress("DEPRECATION")
             reactNativeHost.reactInstanceManager.currentReactContext

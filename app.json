@@ -36,7 +36,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "versionCode": 12
+      "versionCode": 16
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -49,7 +49,6 @@
         "projectId": "733a4035-d051-4be8-a1ef-4cfc6160f347"
       }
     },
-    "owner": "micheleschiavo",
-    "newArchEnabled": false
+    "owner": "micheleschiavo"
   }
 }
