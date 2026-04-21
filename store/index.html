@@ -344,8 +344,6 @@
 </head>
 <body>
 
-<!-- ── Coming Soon Toast ───────────────────────────────────────── -->
-<div id="cs-toast">🚀 <span>Coming Soon</span> — we'll notify you at launch!</div>
 
 <!-- ── Navbar ──────────────────────────────────────────────────── -->
 <nav>
@@ -354,7 +352,7 @@
       <img src="logo-white.png" alt="Direktunes" class="logo-img" />
     </a>
     <div class="nav-right">
-      <button class="nav-cta cs-btn">Get Started</button>
+      <a href="https://maker.direktunes.com" class="nav-cta">Get Started</a>
     </div>
   </div>
 </nav>
@@ -370,7 +368,7 @@
         on the App Store. No streaming. No monthly fees. 
       </p>
       <div class="btn-group">
-        <button class="btn-primary cs-btn">Get Started Free</button>
+        <a href="https://maker.direktunes.com" class="btn-primary">Get Started Free</a>
         <a href="#solution" class="btn-secondary">Learn More</a>
       </div>
     </div>
@@ -652,7 +650,7 @@
     <span class="tag tag-yellow">Ready to launch?</span>
     <h2>Turn your album into<br><em>your own app.</em></h2>
     <p>Join independent musicians already publishing with Direktunes.</p>
-    <button class="cta-btn cs-btn">Get Started Today</button>
+    <a href="https://maker.direktunes.com" class="cta-btn">Get Started Today</a>
   </div>
 </section>
 
@@ -664,38 +662,6 @@
   </div>
 </footer>
 
-<!-- ── Coming Soon Logic ─────────────────────────────────────────── -->
-<script>
-  const toast = document.getElementById('cs-toast');
-  let toastTimer;
-
-  function showToast() {
-    clearTimeout(toastTimer);
-    toast.classList.add('show');
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
-  }
-
-  document.querySelectorAll('.cs-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      this.textContent = 'COMING SOON';
-      this.classList.add('coming');
-      showToast();
-      // Reset button text after toast disappears
-      const orig = this.dataset.orig || this.textContent;
-      if (!this.dataset.orig) this.dataset.orig = orig;
-      setTimeout(() => {
-        this.textContent = this.dataset.orig || 'Get Started';
-        this.classList.remove('coming');
-      }, 4000);
-    });
-  });
-
-  // Store original text before any clicks
-  document.querySelectorAll('.cs-btn').forEach(btn => {
-    btn.dataset.orig = btn.textContent.trim();
-  });
-</script>
 
 </body>
 </html>
