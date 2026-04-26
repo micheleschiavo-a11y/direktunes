@@ -19,6 +19,8 @@
       --blue-l: #3B82F6;
       --yellow: #F5A623;
       --red:    #E63946;
+      --green:  #3ddc84;
+      --green-d:#2ea86d;
       --dark:   #0C0E1A;
       --dark2:  #12152A;
       --dark3:  #1A1E35;
@@ -130,6 +132,9 @@
     }
     .check-body .badge-red {
       background: rgba(230,57,70,0.15); color: #ff6b7a;
+    }
+    .check-body .badge-green {
+      background: rgba(61,220,132,0.15); color: var(--green);
     }
 
     /* Process steps */
@@ -251,6 +256,11 @@
       cursor: pointer; transition: color .2s;
     }
     .btn-cancel:hover { color: var(--white); }
+
+    /* Responsive: stack platform tracks on narrow screens */
+    @media (max-width: 600px) {
+      .platform-grid { grid-template-columns: 1fr !important; }
+    }
     .form-success {
       text-align: center; padding: 20px 0;
       display: none;
@@ -362,9 +372,27 @@
       <li>
         <div class="check-icon">💻</div>
         <div class="check-body">
-          <h4>A Mac with Xcode</h4>
-          <p>You need a Mac to open the generated project and submit it to the App Store. Xcode is free — download it from the Mac App Store. Not sure what to do after downloading? <a href="/after-download" style="color:#3B82F6;">Read our step-by-step guide →</a></p>
+          <h4>A Mac with Xcode <span style="font-weight:400;color:var(--muted)">(iOS only)</span></h4>
+          <p>You need a Mac to open the generated iOS project and submit it to the App Store. Xcode is free — download it from the Mac App Store. Not sure what to do after downloading? <a href="/after-download" style="color:#3B82F6;">Read our iOS guide →</a></p>
           <span class="badge badge-red">Mac only</span>
+        </div>
+      </li>
+
+      <li>
+        <div class="check-icon">🤖</div>
+        <div class="check-body">
+          <h4>Google Play Developer account <span style="font-weight:400;color:var(--muted)">(Android only)</span></h4>
+          <p>Required to publish on Google Play. Register once at <a href="https://play.google.com/console/signup" target="_blank" style="color:var(--green);">play.google.com/console</a> — it's a one-time fee.</p>
+          <span class="badge badge-green">$25 one-time</span>
+        </div>
+      </li>
+
+      <li>
+        <div class="check-icon">🖥️</div>
+        <div class="check-body">
+          <h4>Android Studio <span style="font-weight:400;color:var(--muted)">(Android only)</span></h4>
+          <p>Free IDE for opening and running the Android project. Works on Mac, Windows and Linux. Download at <a href="https://developer.android.com/studio" target="_blank" style="color:var(--green);">developer.android.com/studio</a>. Not sure what to do after downloading? <a href="/after-download-android" style="color:var(--green);">Read our Android guide →</a></p>
+          <span class="badge badge-green">Free · Mac · Windows · Linux</span>
         </div>
       </li>
 
@@ -374,38 +402,91 @@
   <!-- How it works -->
   <section>
     <h2>⚡ How it works</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h4>Fill in the wizard</h4>
-          <p>Upload your songs, artwork, lyrics and info across 7 simple steps.</p>
+
+    <div class="platform-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:8px;">
+
+      <!-- iOS track -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+          <span style="font-size:18px;">🍎</span>
+          <span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue-l);">iOS — Apple App Store</span>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Fill in the wizard</h4>
+              <p>Upload your songs, artwork, lyrics and info across 7 simple steps.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Download your Xcode project</h4>
+              <p>We build everything automatically and deliver a ready-to-open <strong>.zip</strong> file.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Open in Xcode on your Mac</h4>
+              <p>Select your Apple Developer team and press Archive.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Publish to the App Store</h4>
+              <p>Test with TestFlight, then submit for review. Apple approves within 1–2 days. <a href="/after-download">Full guide →</a></p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="step-divider"></div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h4>Download your Xcode project</h4>
-          <p>We build everything automatically and deliver a ready-to-open <strong>.zip</strong> file.</p>
+
+      <!-- Android track -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+          <span style="font-size:18px;">🤖</span>
+          <span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);">Android — Google Play</span>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:var(--green);color:#0C0E1A;">1</div>
+            <div class="step-body">
+              <h4>Fill in the wizard</h4>
+              <p>The same wizard generates both iOS and Android — no extra steps.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num" style="background:var(--green);color:#0C0E1A;">2</div>
+            <div class="step-body">
+              <h4>Download your Android Studio project</h4>
+              <p>We build an Android Studio–ready <strong>.zip</strong> alongside the iOS project.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num" style="background:var(--green);color:#0C0E1A;">3</div>
+            <div class="step-body">
+              <h4>Open in Android Studio</h4>
+              <p>Works on Mac, Windows or Linux. Gradle syncs automatically. Run on a device or emulator.</p>
+            </div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-num" style="background:var(--green);color:#0C0E1A;">4</div>
+            <div class="step-body">
+              <h4>Publish to Google Play</h4>
+              <p>Generate a signed App Bundle, upload to the Play Console, and submit for review. <a href="/after-download-android" style="color:var(--green);">Full guide →</a></p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="step-divider"></div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h4>Open in Xcode on your Mac</h4>
-          <p>Double-click the project, select your Apple Developer team, and press Archive. <a href="/after-download">Full guide here →</a></p>
-        </div>
-      </div>
-      <div class="step-divider"></div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <h4>Publish to the App Store</h4>
-          <p>Upload to App Store Connect, test with TestFlight, then submit for review. Apple usually approves within 1–2 days.</p>
-        </div>
-      </div>
+
     </div>
   </section>
 
@@ -417,7 +498,8 @@
     <h2>Got everything? <em>Let's go.</em></h2>
     <p>The wizard takes about 10 minutes to complete.</p>
     <a href="https://maker.direktunes.com" class="btn-cta">I'm Ready — Start Creating →</a>
-    <a href="/after-download" class="after-link">📖 Read the After-Download guide first</a>
+    <a href="/after-download" class="after-link">📖 Read the iOS After-Download guide first</a>
+    <a href="/after-download-android" class="after-link" style="color:var(--green);">🤖 Read the Android After-Download guide first</a>
     <br>
     <button class="contact-btn" onclick="document.getElementById('contactModal').classList.add('open')">
       ✉️ Contact us for help
