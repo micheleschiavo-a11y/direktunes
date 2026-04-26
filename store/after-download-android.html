@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>After Download — Apple (iOS) — Direktunes</title>
-  <meta name="description" content="Step-by-step guide: what to do after downloading your Direktunes Xcode project and publishing to the Apple App Store." />
+  <title>After Download — Android — Direktunes</title>
+  <meta name="description" content="Step-by-step guide: what to do after downloading your Direktunes Android Studio project and publishing to Google Play." />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -15,15 +15,15 @@
       line-height: 1.7;
     }
     :root {
-      --blue:   #1A56DB;
-      --blue-l: #3B82F6;
-      --yellow: #F5A623;
-      --red:    #E63946;
-      --dark:   #0C0E1A;
-      --dark2:  #12152A;
-      --dark3:  #1A1E35;
-      --white:  #FFFFFF;
-      --muted:  #8892B0;
+      --green:   #3ddc84;
+      --green-d: #2ea86d;
+      --yellow:  #F5A623;
+      --dark:    #0C0E1A;
+      --dark2:   #12152A;
+      --dark3:   #1A1E35;
+      --white:   #FFFFFF;
+      --muted:   #8892B0;
+      --blue-l:  #3B82F6;
     }
     .container { max-width: 780px; margin: 0 auto; padding: 0 28px; }
 
@@ -38,7 +38,6 @@
       max-width: 1100px; margin: 0 auto; padding: 0 28px;
       height: 64px; display: flex; align-items: center; justify-content: space-between;
     }
-    .logo-img { height: 32px; }
     .logo-text {
       font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
       color: var(--white); text-decoration: none;
@@ -53,7 +52,7 @@
       font-size: 11px; font-weight: 700;
       letter-spacing: 2px; text-transform: uppercase;
       padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
-      background: rgba(26,86,219,0.15); color: var(--blue-l);
+      background: rgba(61,220,132,0.12); color: var(--green);
     }
     .page-hero h1 {
       font-size: clamp(32px, 5vw, 52px);
@@ -81,12 +80,11 @@
     }
     .step-num {
       width: 38px; height: 38px; flex-shrink: 0;
-      background: var(--blue); border-radius: 50%;
+      background: var(--green-d); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 15px; font-weight: 800;
+      font-size: 15px; font-weight: 800; color: #000;
     }
-    .step-num.green { background: #16a34a; }
-    .step-num.yellow { background: #d97706; }
+    .step-num.gold { background: #d97706; color: #fff; }
     .step-body { flex: 1; }
     .step-body h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
     .step-body p { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
@@ -112,6 +110,39 @@
       color: var(--yellow);
       margin-top: 10px;
     }
+    .tip.green {
+      background: rgba(61,220,132,0.08);
+      border-color: rgba(61,220,132,0.25);
+      color: var(--green);
+    }
+
+    /* iOS guide link */
+    .ios-link-box {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .ios-link-box .label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #3B82F6; margin-bottom: 8px; }
+    .ios-link-box .title { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .ios-link-box .sub { font-size: 14px; color: var(--muted); }
+    .btn-ios {
+      flex-shrink: 0;
+      display: inline-block;
+      background: #1A56DB;
+      color: #fff;
+      font-size: 15px; font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
 
     /* CTA */
     .cta-box { text-align: center; padding: 60px 0 80px; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -119,7 +150,9 @@
     .cta-box h2 em { color: var(--yellow); font-style: normal; }
     .cta-box p { color: var(--muted); margin-bottom: 32px; font-size: 16px; }
     .btn-cta {
-      display: inline-block; background: var(--blue); color: #fff;
+      display: inline-block;
+      background: linear-gradient(135deg, var(--green), var(--green-d));
+      color: #000;
       font-size: 16px; font-weight: 700; padding: 14px 36px;
       border-radius: 50px; text-decoration: none;
       transition: opacity .2s, transform .2s; margin-bottom: 16px;
@@ -154,7 +187,7 @@
     .modal input:focus, .modal textarea:focus { border-color: var(--blue-l); }
     .modal textarea { resize: vertical; min-height: 100px; }
     .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
-    .btn-send { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .2s; }
+    .btn-send { background: var(--green-d); color: #fff; border: none; border-radius: 10px; padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .2s; }
     .btn-send:hover { opacity: .85; }
     .btn-cancel { background: none; color: var(--muted); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 11px 20px; font-size: 14px; cursor: pointer; transition: color .2s; }
     .btn-cancel:hover { color: var(--white); }
@@ -169,129 +202,161 @@
 <nav>
   <div class="inner">
     <a href="/" class="logo-text">The Direktunes Maker</a>
-    <a href="/start" class="nav-back">← Back to Before You Start</a>
+    <a href="/after-download" class="nav-back">← iOS Guide</a>
   </div>
 </nav>
 
 <div class="page-hero">
   <div class="container">
-    <span class="tag"> After Download — Apple iOS</span>
-    <h1>Publishing to the <em>App Store</em></h1>
-    <p>Your Xcode project is ready. Follow these steps to install it on your iPhone and publish it to the Apple App Store.</p>
+    <span class="tag">🤖 After Download — Android</span>
+    <h1>Publishing to <em>Google Play</em></h1>
+    <p>Your Android Studio project is ready. Follow these steps to test it on your phone and publish it to the Google Play Store.</p>
   </div>
 </div>
 
 <div class="container">
   <div class="step-group">
 
-    <h2>Part 1 — Open the project in Xcode</h2>
+    <h2>Part 1 — Open the project in Android Studio</h2>
 
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-body">
         <h3>Unzip the downloaded file</h3>
-        <p>Find the <span class="code">.zip</span> file in your Downloads folder and double-click it. A folder will appear with your project inside.</p>
+        <p>Find the <span class="code">_android.zip</span> file in your Downloads folder and double-click it. A folder will appear with your Android project inside.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-body">
-        <h3>Open Xcode</h3>
-        <p>If you don't have Xcode yet, download it for free from the <a href="https://apps.apple.com/app/xcode/id497799835" target="_blank">Mac App Store</a>. It's a large download (~10 GB) so allow some time.</p>
+        <h3>Install Android Studio</h3>
+        <p>If you don't have Android Studio yet, download it for free from <a href="https://developer.android.com/studio" target="_blank">developer.android.com/studio</a>. It's available for Mac, Windows and Linux (~1 GB download).</p>
+        <div class="tip">💡 During setup, let Android Studio install the recommended SDK components. This takes a few minutes but only happens once.</div>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
-        <h3>Open the project file</h3>
-        <p>Inside the unzipped folder, find <span class="code">Direktune.xcodeproj</span> and double-click it. Xcode will open.</p>
+        <h3>Open the project folder</h3>
+        <p>In Android Studio, click <strong>Open</strong> from the welcome screen (or <strong>File → Open</strong>), then navigate to the unzipped folder and click <strong>OK</strong>.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-body">
-        <h3>Select your development team</h3>
-        <p>In the left sidebar, click the blue <strong>Direktune</strong> project icon → click <strong>Direktune</strong> under TARGETS → click <strong>Signing &amp; Capabilities</strong> → under <strong>Team</strong>, select your Apple ID.</p>
-        <p>If your Apple ID is not listed, click <strong>Add an Account…</strong> and sign in.</p>
+        <h3>Wait for Gradle sync</h3>
+        <p>Android Studio will automatically download all dependencies and sync the project. This can take 2–5 minutes the first time. You'll see a progress bar at the bottom.</p>
+        <div class="tip">💡 If you see a "Gradle sync failed" error, try <strong>File → Sync Project with Gradle Files</strong>. Make sure you have an internet connection.</div>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">5</div>
       <div class="step-body">
-        <h3>Register your Bundle ID (first time only)</h3>
-        <p>If Xcode shows an error about the Bundle ID, go to <a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank">developer.apple.com → Identifiers</a>, click <strong>+</strong>, select <strong>App IDs</strong>, enter your Bundle ID (e.g. <span class="code">com.yourname.albumname</span>) and click <strong>Register</strong>. Then go back to Xcode.</p>
+        <h3>Accept SDK licences (first time only)</h3>
+        <p>If Android Studio shows a licence warning, click <strong>Accept</strong> or go to <strong>SDK Manager → SDK Platforms</strong> and accept any pending licences. This only happens once per machine.</p>
       </div>
     </div>
 
     <div class="step">
-      <div class="step-num step-num" style="background:#16a34a">6</div>
+      <div class="step-num" style="background:#16a34a;color:#fff;">6</div>
       <div class="step-body">
-        <h3>Test on your iPhone</h3>
-        <p>Connect your iPhone, select it from the device dropdown at the top of Xcode, and press the <strong>▶ Play</strong> button. The app will install and open on your phone.</p>
-        <div class="tip">💡 Your iPhone must be set to Developer Mode: Settings → Privacy & Security → Developer Mode → ON</div>
+        <h3>Test on your Android phone or emulator</h3>
+        <p><strong>Physical device:</strong> connect your phone via USB, enable <strong>Developer Options</strong> (Settings → About Phone → tap Build Number 7 times) then turn on <strong>USB Debugging</strong>. Your phone will appear in the device dropdown at the top of Android Studio.</p>
+        <p><strong>Emulator:</strong> go to <strong>Tools → Device Manager → Create Device</strong>, choose a phone model (e.g. Pixel 8) and a system image, then click <strong>Finish</strong>.</p>
+        <p>Press the green <strong>▶ Run</strong> button — the app will install and launch.</p>
+        <div class="tip">💡 Test all 6 screens: Home, Player, Lyrics, Tour, Notes and Credits. Try locking the screen while music plays — media controls should appear.</div>
       </div>
     </div>
 
-    <h2>Part 2 — Publish to the App Store</h2>
+    <h2>Part 2 — Sign &amp; build for release</h2>
 
     <div class="step">
       <div class="step-num">7</div>
       <div class="step-body">
-        <h3>Create the app in App Store Connect</h3>
-        <p>Go to <a href="https://appstoreconnect.apple.com" target="_blank">appstoreconnect.apple.com</a> → <strong>My Apps</strong> → <strong>+</strong> → <strong>New App</strong>. Fill in the name, language, Bundle ID, and SKU (any unique text). Click <strong>Create</strong>.</p>
+        <h3>Generate a signed App Bundle</h3>
+        <p>In Android Studio, go to <strong>Build → Generate Signed Bundle / APK</strong> → choose <strong>Android App Bundle</strong> → click <strong>Next</strong>.</p>
+        <p>If you don't have a keystore yet, click <strong>Create new…</strong>, fill in the details and save it somewhere safe. <strong>Never lose this file</strong> — you'll need it for every future update.</p>
+        <p>Select <strong>release</strong> as the build variant and click <strong>Finish</strong>. Android Studio will generate a <span class="code">.aab</span> file in your project's <span class="code">release/</span> folder.</p>
+        <div class="tip">⚠️ Store your keystore file and passwords safely. If you lose them you cannot update the app on Google Play.</div>
       </div>
     </div>
+
+    <h2>Part 3 — Publish on Google Play</h2>
 
     <div class="step">
       <div class="step-num">8</div>
       <div class="step-body">
-        <h3>Archive the app in Xcode</h3>
-        <p>Set the destination to <strong>Any iOS Device (arm64)</strong> — not a simulator, not your iPhone. Then go to <strong>Product → Archive</strong> in the menu bar. Wait 1–2 minutes for it to finish.</p>
+        <h3>Create a Google Play Developer account</h3>
+        <p>If you don't have one, go to <a href="https://play.google.com/console" target="_blank">play.google.com/console</a> and sign up. There is a one-time <strong>$25 registration fee</strong>. Account verification takes up to 48 hours.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">9</div>
       <div class="step-body">
-        <h3>Upload to TestFlight</h3>
-        <p>When the Organizer window opens, click <strong>Distribute App</strong> → <strong>TestFlight &amp; App Store</strong> → keep all defaults → <strong>Upload</strong>. Apple will process the build in 5–15 minutes.</p>
+        <h3>Create a new app</h3>
+        <p>In Google Play Console, click <strong>Create app</strong>. Fill in the app name, default language, whether it's an app or game, and whether it's free or paid. Click <strong>Create app</strong> to continue.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">10</div>
       <div class="step-body">
-        <h3>Test with TestFlight</h3>
-        <p>In App Store Connect → TestFlight, add yourself as a tester. You'll receive an email invitation. Open the <strong>TestFlight</strong> app on your iPhone and install the build.</p>
-        <div class="tip">💡 Always test with TestFlight before submitting to the App Store.</div>
+        <h3>Complete the store listing</h3>
+        <p>Go to <strong>Store presence → Main store listing</strong> and fill in:</p>
+        <p>• Short description (80 characters max)<br>• Full description (4000 characters max)<br>• Screenshots (at least 2, portrait recommended)<br>• Feature graphic (1024 × 500 px banner)<br>• App icon (512 × 512 px)</p>
       </div>
     </div>
 
     <div class="step">
-      <div class="step-num" style="background:#16a34a">11</div>
+      <div class="step-num">11</div>
       <div class="step-body">
-        <h3>Submit to the App Store</h3>
-        <p>In App Store Connect, fill in your app's description, screenshots, age rating and pricing. Then click <strong>Submit for Review</strong>. Apple typically reviews within <strong>1–2 days</strong>.</p>
-        <div class="tip">🎉 Once approved, your app is live on the App Store and your fans can download it!</div>
+        <h3>Upload your App Bundle</h3>
+        <p>Go to <strong>Production → Releases → Create new release</strong>. Click <strong>Upload</strong> and select the <span class="code">.aab</span> file you generated in step 7. Add release notes (what's new) and click <strong>Next</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">12</div>
+      <div class="step-body">
+        <h3>Set content rating</h3>
+        <p>Go to <strong>Policy → App content → Content rating</strong> and complete the questionnaire. For a music app, you'll likely receive an <strong>Everyone</strong> rating.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">13</div>
+      <div class="step-body">
+        <h3>Set pricing &amp; distribution</h3>
+        <p>Go to <strong>Monetise → Pricing</strong> to set your app price (or make it free). Under <strong>Distribution</strong>, select the countries where you want to sell.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:#16a34a;color:#fff;">14</div>
+      <div class="step-body">
+        <h3>Submit for review</h3>
+        <p>Once all required sections show a green tick, go to <strong>Production</strong> and click <strong>Send for review</strong>. Google typically reviews within <strong>1–3 days</strong> for new apps.</p>
+        <div class="tip green">🎉 Once approved, your app is live on Google Play and your fans can download it worldwide!</div>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- Android guide link -->
+<!-- iOS guide link -->
 <div class="container">
-  <div style="background:#12152A;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px 32px;margin-bottom:48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+  <div class="ios-link-box">
     <div>
-      <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3ddc84;margin-bottom:8px;">🤖 Also available</div>
-      <div style="font-size:18px;font-weight:800;margin-bottom:6px;">After Download — Android Guide</div>
-      <div style="font-size:14px;color:#8892B0;">Step-by-step guide to open your Android Studio project and publish to Google Play.</div>
+      <div class="label"> Also available</div>
+      <div class="title">After Download — Apple iOS Guide</div>
+      <div class="sub">Step-by-step guide to open your Xcode project and publish to the Apple App Store.</div>
     </div>
-    <a href="/after-download-android" style="flex-shrink:0;display:inline-block;background:linear-gradient(135deg,#3ddc84,#2ea86d);color:#000;font-size:15px;font-weight:700;padding:13px 28px;border-radius:50px;text-decoration:none;white-space:nowrap;">Android Guide →</a>
+    <a href="/after-download" class="btn-ios">iOS Guide →</a>
   </div>
 </div>
 
