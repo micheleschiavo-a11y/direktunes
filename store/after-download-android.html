@@ -115,6 +115,28 @@
       border-color: rgba(61,220,132,0.25);
       color: var(--green);
     }
+    .tip.red {
+      background: rgba(230,57,70,0.08);
+      border-color: rgba(230,57,70,0.25);
+      color: #ff6b7a;
+    }
+    .warn-box {
+      background: rgba(245,166,35,0.07);
+      border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .warn-box .warn-title {
+      font-size: 14px; font-weight: 800;
+      color: var(--yellow); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .warn-box p { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .warn-box p:last-child { margin-bottom: 0; }
+    .warn-box strong { color: #F0F0F0; }
+    .warn-box a { color: var(--green); text-decoration: none; }
+    .warn-box a:hover { text-decoration: underline; }
 
     /* iOS guide link */
     .ios-link-box {
@@ -292,6 +314,12 @@
       <div class="step-body">
         <h3>Create a Google Play Developer account</h3>
         <p>If you don't have one, go to <a href="https://play.google.com/console" target="_blank">play.google.com/console</a> and sign up. There is a one-time <strong>$25 registration fee</strong>. Account verification takes up to 48 hours.</p>
+        <div class="warn-box" style="margin-top:12px;">
+          <div class="warn-title">⚠️ Individual accounts — mandatory 14-day testing period</div>
+          <p>If you register as an <strong>individual</strong> (not an organisation), Google requires you to run a <strong>closed testing track with at least 12 opted-in testers for 14 continuous days</strong> before your app can be promoted to production. The clock only starts once all 12 testers have accepted the invite and the build is live in testing — so plan ahead.</p>
+          <p>👉 <strong>Recommendation:</strong> if this is your first Google Play account, register as an <strong>Organisation / Business</strong> instead. Business accounts skip the mandatory testing period entirely and can submit directly to production after review — saving you up to 2 weeks.</p>
+          <p>See step 11 below for instructions on setting up closed testing if you already have an individual account.</p>
+        </div>
       </div>
     </div>
 
@@ -316,7 +344,19 @@
       <div class="step-num">11</div>
       <div class="step-body">
         <h3>Upload your App Bundle</h3>
-        <p>Go to <strong>Production → Releases → Create new release</strong>. Click <strong>Upload</strong> and select the <span class="code">.aab</span> file you generated in step 7. Add release notes (what's new) and click <strong>Next</strong>.</p>
+
+        <p><strong>Organisation / Business account</strong> — go straight to <strong>Production → Releases → Create new release</strong>. Click <strong>Upload</strong>, select your <span class="code">.aab</span> file, add release notes and click <strong>Next</strong>.</p>
+
+        <div class="warn-box" style="margin-top:10px;margin-bottom:10px;">
+          <div class="warn-title">⚠️ Individual account — closed testing required first</div>
+          <p>You cannot submit to Production until your app has been in <strong>Closed Testing</strong> with at least <strong>12 opted-in testers for 14 continuous days</strong>. Follow these steps:</p>
+          <p>1. Go to <strong>Testing → Closed Testing → Create new track</strong> (call it e.g. "Alpha").<br>
+             2. Upload your <span class="code">.aab</span> and publish the release to the track.<br>
+             3. Go to <strong>Testers</strong> within the track and add at least 12 email addresses. Send each person the opt-in link — they must actively accept it.<br>
+             4. Wait <strong>14 consecutive days</strong> with the build live and all 12 testers opted in.<br>
+             5. After 14 days, the <strong>Promote to Production</strong> button becomes available — click it and continue from step 12 below.</p>
+          <p>💡 Friends, family, or band members work fine as testers — they just need a Google account and must click the opt-in link you send them.</p>
+        </div>
       </div>
     </div>
 
