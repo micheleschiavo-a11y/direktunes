@@ -30,7 +30,8 @@ export default function BottomBanners() {
   const track = TRACKS[currentTrackIndex];
 
   const NAV_ITEMS: { label: string; screen: Screen }[] = [
-    { label: 'Home', screen: 'home' },
+    { label: 'Miskia', screen: 'artist' },
+    { label: 'Album', screen: 'home' },
     { label: 'Lyrics', screen: 'lyrics' },
     { label: 'Notes', screen: 'notes' },
     { label: 'Credits', screen: 'credits' },
@@ -45,6 +46,10 @@ export default function BottomBanners() {
       await togglePlay();
     }
   };
+
+  const hideMiniPlayer = activeScreen === 'artist' && !isPlaying;
+
+  if (hideMiniPlayer) return null;
 
   return (
     <View style={[styles.wrapper, { paddingBottom: insets.bottom }]}>
@@ -66,8 +71,8 @@ export default function BottomBanners() {
         </View>
       </View>
 
-      {/* Banner 2 — Navigation */}
-      <View style={styles.navBar}>
+      {/* Banner 2 — Navigation (hidden on Miskia/artist screen) */}
+      {activeScreen !== 'artist' && <View style={styles.navBar}>
         {NAV_ITEMS.map(({ label, screen }) => {
           const isActive = activeScreen === screen;
           return (
@@ -84,7 +89,7 @@ export default function BottomBanners() {
             </TouchableOpacity>
           );
         })}
-      </View>
+      </View>}
     </View>
   );
 }
@@ -144,10 +149,10 @@ const styles = StyleSheet.create({
   },
   navLabel: {
     color: '#666666',
-    fontSize: 11,
+    fontSize: 9,
     fontWeight: '500',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   navLabelActive: {
     color: ACCENT,

@@ -12,6 +12,7 @@
     "expo": "~55.0.6",
     "expo-dev-client": "~55.0.18",
     "expo-status-bar": "~55.0.4",
+    "expo-store-review": "~55.0.13",
     "react": "19.2.0",
     "react-native": "0.83.2",
     "react-native-safe-area-context": "^5.7.0",
@@ -29,7 +30,9 @@
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
-        "exclude": ["react-native-track-player"]
+        "exclude": [
+          "react-native-track-player"
+        ]
       }
     }
   }

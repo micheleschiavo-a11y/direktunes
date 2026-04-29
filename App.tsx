@@ -1,8 +1,10 @@
-import React, { useEffect, Component } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import React, { useEffect, useRef, Component } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, PanResponder } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TrackPlayer, { useTrackPlayerEvents, useProgress, Event, State } from 'react-native-track-player';
-import { usePlayerStore } from './store/playerStore';
+import * as StoreReview from 'expo-store-review';
+import { usePlayerStore, getAdjacentScreen } from './store/playerStore';
+import ArtistScreen from './screens/ArtistScreen';
 import HomeScreen from './screens/HomeScreen';
 import LyricsScreen from './screens/LyricsScreen';
 import NotesScreen from './screens/NotesScreen';
@@ -97,8 +99,9 @@ const errorStyles = StyleSheet.create({
 });
 
 export default function App() {
-  const { activeScreen, initAudio } = usePlayerStore();
+  const { activeScreen, navigate, initAudio, songsPlayedCount } = usePlayerStore();
   const progress = useProgress(250);
+  const ratingShown = useRef(false);
 
   useEffect(() => {
     initAudio();
@@ -111,6 +114,16 @@ export default function App() {
       duration: progress.duration,
     });
   }, [progress.position, progress.duration]);
+
+  // Trigger in-app review after the user has played 3 songs (once per session)
+  useEffect(() => {
+    if (songsPlayedCount >= 3 && !ratingShown.current) {
+      ratingShown.current = true;
+      StoreReview.isAvailableAsync().then((available) => {
+        if (available) StoreReview.requestReview();
+      });
+    }
+  }, [songsPlayedCount]);
 
   // Sync play state and handle auto-advance when queue ends
   useTrackPlayerEvents(
@@ -129,8 +142,24 @@ export default function App() {
     }
   );
 
+  // Horizontal swipe: finger left → next screen, finger right → previous screen
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gs) =>
+        Math.abs(gs.dx) > 10 && Math.abs(gs.dx) > Math.abs(gs.dy) * 1.5,
+      onPanResponderRelease: (_, gs) => {
+        if (Math.abs(gs.dy) > 80) return;
+        const { activeScreen: current, navigate: nav } = usePlayerStore.getState();
+        if (gs.dx < -50) nav(getAdjacentScreen(current, 'right'));
+        else if (gs.dx > 50) nav(getAdjacentScreen(current, 'left'));
+      },
+    })
+  ).current;
+
   const renderScreen = () => {
     switch (activeScreen) {
+      case 'artist':
+        return <ArtistScreen />;
       case 'home':
         return <HomeScreen />;
       case 'lyrics':
@@ -147,8 +176,8 @@ export default function App() {
   return (
     <AppErrorBoundary>
       <SafeAreaProvider>
-        <StatusBar barStyle="light-content" backgroundColor="#0A0A0A" />
-        <View style={styles.container}>
+        <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+        <View style={styles.container} {...panResponder.panHandlers}>
           {renderScreen()}
           <BottomBanners />
         </View>

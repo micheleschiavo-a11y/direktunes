@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, Text, View, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import * as StoreReview from 'expo-store-review';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ACCENT = '#C8A951';
@@ -45,6 +46,18 @@ export default function CreditsScreen() {
           <Text style={styles.badgeSealText}>Direktunes · Owned Outright</Text>
         </View>
       </View>
+
+      {/* Rate this app */}
+      <TouchableOpacity
+        style={styles.rateBtn}
+        onPress={async () => {
+          const available = await StoreReview.isAvailableAsync();
+          if (available) StoreReview.requestReview();
+        }}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.rateBtnText}>⭐ Rate this app</Text>
+      </TouchableOpacity>
 
       {/* Privacy Policy */}
       <TouchableOpacity
@@ -142,8 +155,24 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
-  privacyBtn: {
+  rateBtn: {
     marginTop: 32,
+    alignSelf: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 10,
+    backgroundColor: '#1A1A1A',
+    borderWidth: 1,
+    borderColor: '#C8A951',
+  },
+  rateBtnText: {
+    color: '#C8A951',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+  },
+  privacyBtn: {
+    marginTop: 16,
     alignSelf: 'center',
   },
   privacyBtnText: {

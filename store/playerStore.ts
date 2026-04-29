@@ -3,7 +3,15 @@ import TrackPlayer, { Capability } from 'react-native-track-player';
 import type { Track as RNTPTrack } from 'react-native-track-player';
 import { TRACKS, ALBUM } from '../data/tracks';
 
-export type Screen = 'home' | 'lyrics' | 'notes' | 'credits';
+export type Screen = 'artist' | 'home' | 'lyrics' | 'notes' | 'credits';
+
+export const SCREEN_ORDER: Screen[] = ['artist', 'home', 'lyrics', 'notes', 'credits'];
+
+export function getAdjacentScreen(current: Screen, direction: 'left' | 'right'): Screen {
+  const idx = SCREEN_ORDER.indexOf(current);
+  if (direction === 'left') return idx > 0 ? SCREEN_ORDER[idx - 1] : current;
+  return idx < SCREEN_ORDER.length - 1 ? SCREEN_ORDER[idx + 1] : current;
+}
 
 interface PlayerStore {
   // Navigation
@@ -19,6 +27,9 @@ interface PlayerStore {
   isReady: boolean;   // true after first loadAndPlayTrack
   shuffleOrder: number[];
   playerSetupError: string | null;
+
+  // Rating
+  songsPlayedCount: number;
 
   // Actions
   initAudio: () => Promise<void>;
@@ -54,7 +65,7 @@ function buildRntpTracks(indices: number[]): RNTPTrack[] {
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
-  activeScreen: 'home',
+  activeScreen: 'artist',
   navigate: (screen) => set({ activeScreen: screen }),
 
   currentTrackIndex: 0,
@@ -65,6 +76,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   isReady: false,
   shuffleOrder: Array.from({ length: TRACKS.length }, (_, i) => i),
   playerSetupError: null,
+  songsPlayedCount: 0,
 
   initAudio: async () => {
     try {
@@ -131,7 +143,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     await TrackPlayer.add(buildRntpTracks(orderedIndices));
     await TrackPlayer.play();
 
-    set({ currentTrackIndex: index, isPlaying: true, isReady: true, position: 0 });
+    set((s) => ({
+      currentTrackIndex: index,
+      isPlaying: true,
+      isReady: true,
+      position: 0,
+      songsPlayedCount: s.songsPlayedCount + 1,
+    }));
   },
 
   togglePlay: async () => {
