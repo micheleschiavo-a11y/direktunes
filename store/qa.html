@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Q&amp;A — Direktunes</title>
+  <meta name="description" content="Frequently asked questions about DT Albums — what they are, how to create one, how to publish it, and how to earn from your music." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0C0E1A;
+      color: #F0F0F0;
+      line-height: 1.7;
+    }
+    :root {
+      --blue:   #1A56DB;
+      --blue-l: #3B82F6;
+      --yellow: #F5A623;
+      --red:    #E63946;
+      --green:  #3ddc84;
+      --dark:   #0C0E1A;
+      --dark2:  #12152A;
+      --dark3:  #1A1E35;
+      --white:  #FFFFFF;
+      --muted:  #8892B0;
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,14,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    nav .inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo-text {
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--yellow); background: rgba(245,166,35,0.1); }
+    @media (max-width: 680px) {
+      .logo-text { font-size: 14px; }
+      .nav-link  { font-size: 12px; padding: 6px 8px; }
+    }
+    @media (max-width: 440px) {
+      .logo-text { display: none; }
+      nav .inner { justify-content: center; }
+    }
+
+    /* ── Page hero ────────────────────────────────────── */
+    .page-hero {
+      padding: 110px 0 56px;
+      text-align: center;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .tag-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 900; letter-spacing: -1.5px; margin-bottom: 14px;
+    }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p {
+      font-size: 18px; color: var(--muted);
+      max-width: 560px; margin: 0 auto;
+    }
+
+    /* ── Q&A sections ─────────────────────────────────── */
+    .qa-group {
+      margin-bottom: 48px;
+    }
+    .qa-group-title {
+      font-size: 12px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--yellow);
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(245,166,35,0.2);
+    }
+    .qa-item {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .qa-q {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; cursor: pointer;
+      font-size: 16px; font-weight: 700; color: var(--white);
+      gap: 16px; user-select: none;
+    }
+    .qa-q:hover { background: rgba(255,255,255,0.03); }
+    .qa-chevron {
+      font-size: 12px; color: var(--muted); flex-shrink: 0;
+      transition: transform .25s;
+    }
+    .qa-item.open .qa-chevron { transform: rotate(180deg); }
+    .qa-a {
+      display: none; padding: 0 24px 22px;
+      font-size: 15px; color: var(--muted); line-height: 1.8;
+    }
+    .qa-item.open .qa-a { display: block; }
+    .qa-a p { margin-bottom: 12px; }
+    .qa-a p:last-child { margin-bottom: 0; }
+    .qa-a strong { color: var(--white); }
+    .qa-a ul, .qa-a ol {
+      padding-left: 20px; margin-bottom: 12px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .qa-a li { font-size: 15px; }
+    .qa-a a { color: var(--blue-l); text-decoration: none; }
+    .qa-a a:hover { text-decoration: underline; }
+    .qa-a .highlight {
+      background: rgba(245,166,35,0.08);
+      border-left: 3px solid var(--yellow);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px; margin: 14px 0;
+      color: var(--white); font-size: 15px; line-height: 1.7;
+    }
+
+    /* ── YouTube banner ───────────────────────────────── */
+    .yt-banner {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 60px;
+    }
+    .yt-icon { font-size: 36px; flex-shrink: 0; }
+    .yt-banner h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .yt-banner p  { font-size: 14px; color: var(--muted); }
+    .yt-banner a  { color: var(--blue-l); text-decoration: none; }
+    .yt-banner a:hover { text-decoration: underline; }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 0; text-align: center;
+    }
+    footer p { font-size: 13px; color: #444; }
+    .footer-logo { height: 28px; opacity: .5; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="inner">
+    <a href="/" class="logo-text">The Direktunes Maker</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/files" class="nav-link">Files</a>
+      <a href="/start" class="nav-link">Start</a>
+      <a href="/qa" class="nav-link active">Q&amp;A</a>
+      <a href="/contact" class="nav-link">Contact Me</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <span class="tag tag-yellow">&#9834; Questions &amp; Answers</span>
+    <h1>The Logic Behind <em>Direktunes</em></h1>
+    <p>Everything independent musicians need to know about DT Albums — what they are, why they matter, and how to get started.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom: 80px;">
+
+  <!-- Group 1: What -->
+  <div class="qa-group">
+    <div class="qa-group-title">What is a DT Album?</div>
+
+    <div class="qa-item open">
+      <div class="qa-q" onclick="toggle(this)">
+        What exactly is a DT Album?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>A DT Album is a <strong>native mobile app containing your music</strong> — your songs, lyrics, album artwork, liner notes, tour dates and credits — packaged together and sold directly on the Apple App Store and Google Play Store.</p>
+        <p>Think of it as the natural evolution of the vinyl record, the cassette tape and the CD. Each of those formats bundled songs with artwork, notes and credits. A DT Album does the same, but instead of a turntable or a CD player, your fans use their <strong>mobile phone</strong>.</p>
+        <div class="highlight">
+          A DT Album is YOUR OWN app. You own it. You set the price. Your fans download it once and keep it forever — no subscription, no algorithm, no streaming.
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How is a DT Album different from Spotify or Apple Music?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>The differences are fundamental:</p>
+        <ul>
+          <li><strong>Streaming vs. ownership</strong> — Spotify streams music from its servers. A DT Album contains your songs already loaded inside the app, so fans can listen anytime, even without an internet connection.</li>
+          <li><strong>Their platform vs. your app</strong> — On Spotify, your music lives inside their app. A DT Album is your own independent app, listed under your name.</li>
+          <li><strong>Fractions vs. real money</strong> — Spotify pays roughly USD $0.003 per stream. With a DT Album, fans pay you a fixed price — you set it, you keep most of it.</li>
+          <li><strong>Their data vs. your fans</strong> — Streaming platforms own the listener relationship. With a DT Album, you have a direct connection with the people who buy your music.</li>
+          <li><strong>AI training</strong> — Music on streaming platforms may be used to train AI models. DT Albums give you better control over how your music is used (though the legal landscape here is still evolving).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        What does a DT Album look like on the phone?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>A DT Album typically has 5–7 screens that fans can navigate freely:</p>
+        <ul>
+          <li><strong>Artist screen</strong> — your photo, your name, links to the other screens</li>
+          <li><strong>Album screen</strong> — artwork, music player controls, scrollable track list, mini-player</li>
+          <li><strong>Lyrics screen</strong> — scrollable lyrics, optionally synchronised line by line as the song plays</li>
+          <li><strong>Tour screen</strong> — your upcoming concert dates and venues</li>
+          <li><strong>Notes screen</strong> — the story behind the album, recording notes, inspiration</li>
+          <li><strong>Credits screen</strong> — full production credits and an ownership badge</li>
+        </ul>
+        <p>The app plays music in the background while fans use other apps or lock their screen, and supports swipe navigation between screens. You can see a real example on the <a href="/files">Files page</a> — scan the QR code to download the sample album.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Why is it called a "DT Album"?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>DT stands for <strong>Direktunes</strong>. As a new product category, it needs a name. The idea is that music lovers will eventually say: <em>"I downloaded the new DT Album by [your band]"</em> — just as people say vinyl, CD, or cassette.</p>
+        <p>The term DT Album is open for anyone to use, free of charge and without restrictions. It is meant to become a shared language for independent music distribution.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group 2: Why -->
+  <div class="qa-group">
+    <div class="qa-group-title">Why DT Albums?</div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Why should I consider DT Albums instead of just staying on streaming platforms?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>Independent musicians deserve three things that streaming platforms consistently fail to deliver:</p>
+        <ul>
+          <li><strong>A direct relationship with fans</strong> — streaming platforms will never share listener data or allow real fan connections. Your DT Album is your own channel.</li>
+          <li><strong>Fair compensation</strong> — you would need over 1.5 million streams on Spotify to earn what 1,000 DT Album downloads at USD $7 would generate.</li>
+          <li><strong>Creative and commercial control</strong> — you decide the price, the design, the content, and when or whether to update the app.</li>
+        </ul>
+        <p>Additionally, streaming is becoming increasingly noisy — millions of AI-generated tracks compete with real music every day. A DT Album gives your work a dedicated, distraction-free space.</p>
+        <div class="highlight">
+          1,000 downloads × USD $7 ≈ USD $5,800 after store fees and tooling costs. You would need more than 1.5 million streams on Spotify to earn the same amount.
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        What are the main advantages of DT Albums over other formats?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <ul>
+          <li><strong>Cheap to produce</strong> — thanks to AI and vibe coding, creating a DT Album costs a fraction of what a traditional album release requires.</li>
+          <li><strong>Worldwide distribution</strong> — the App Store and Google Play reach every country on earth from day one.</li>
+          <li><strong>Direct revenue</strong> — fans pay once to own your music. The money flows directly to your developer account.</li>
+          <li><strong>Hard to copy illegally</strong> — native apps are considerably more difficult to pirate than MP3 files.</li>
+          <li><strong>No middlemen</strong> — no label, no distributor, no aggregator taking a cut before the money reaches you.</li>
+          <li><strong>You control the experience</strong> — you decide how your music is presented, at what price, with what artwork and what story.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Won't fans have to buy hundreds of separate apps?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>Consider this: the monthly cost of a single streaming subscription is enough to buy 4–5 DT Albums from your favourite artists. And with DT Albums, you know with certainty that your money goes directly to the artist — not to record companies, not to platform executives.</p>
+        <p>Managing DT Albums on a phone works the same way as managing games — you install the ones you love, delete the ones you no longer want, and keep the ones that matter. In the future, a dedicated free app may be developed to manage all DT Albums in one place.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group 3: How to create -->
+  <div class="qa-group">
+    <div class="qa-group-title">How to create a DT Album</div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How do I create a DT Album?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>There are two ways:</p>
+        <ol>
+          <li>
+            <p><strong>The TDM Website</strong> — the easiest and free option. Go to <a href="/start">direktunes.com/start</a>, follow the 8-step wizard to upload your songs, photos, lyrics, notes and credits, then click download. In seconds you receive a ready-to-open iOS Xcode project and Android Gradle project as zip files.</p>
+          </li>
+          <li>
+            <p><strong>Claude Code</strong> — for musicians who are comfortable with AI tools or willing to learn. Download the CLAUDE.md and trigger prompt from the <a href="/files">Files page</a>. Place the files in a folder with your music assets, open Claude Code, paste the trigger prompt, and Claude will guide you through the entire build and publishing process — including troubleshooting errors and advising on App Store submission.</p>
+          </li>
+        </ol>
+        <p>Either way, you will need the same raw materials: your songs (MP3/WAV/AAC), an artist photo, album artwork, an app icon, and optionally lyrics, liner notes, tour dates and credits.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Do I need to know how to code?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p><strong>No coding knowledge is required.</strong> The TDM wizard on this website handles everything automatically — you upload your content, and it generates the app projects for you.</p>
+        <p>If you choose to use Claude Code instead, you will be doing what is called <em>vibe coding</em> — guiding an AI to write and manage code on your behalf through natural conversation. There is a learning curve, but it is far more accessible than most people expect. In my personal experience, it is much easier to learn than playing a new musical instrument.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group 4: Publishing -->
+  <div class="qa-group">
+    <div class="qa-group-title">Publishing on the App Stores</div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How do I publish my DT Album on the Apple App Store?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>You need to register as an <strong>Apple Developer</strong> at <a href="https://developer.apple.com/programs/enroll/" target="_blank">developer.apple.com</a>. The cost is <strong>USD $99 per year</strong>. Once registered, you can publish as many apps as you like under that account.</p>
+        <p>The publishing process on iOS requires a Mac with Xcode (free from the Mac App Store). You open the generated Xcode project, set your developer team, archive the app, and submit it to App Store Connect. Apple typically reviews and approves apps within 1–2 days.</p>
+        <p>When fans purchase your DT Album, Apple deducts <strong>30% of earnings</strong> (or 15% if you qualify for the Small Business Program — ask Claude Code how to apply for it).</p>
+        <p>Not sure what to do after downloading the Xcode project? Read our <a href="/after-download">iOS step-by-step guide →</a></p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How do I publish on Google Play (Android)?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>Register as a <strong>Google Play Developer</strong> at <a href="https://play.google.com/console/signup" target="_blank">play.google.com/console</a>. The cost is a <strong>one-time USD $25</strong> registration fee.</p>
+        <p>If possible, register as an <strong>Organisation / Business account</strong> rather than a personal account. Personal accounts must run a closed testing track with at least 12 testers for 14 continuous days before submitting to production. Organisation accounts can skip this requirement and publish directly.</p>
+        <p>Google deducts <strong>15% of earnings</strong> — roughly half of Apple's cut. Android Studio (free, runs on Mac, Windows and Linux) is used to open the generated project, build a signed App Bundle, and upload it to the Play Console.</p>
+        <p>Read our <a href="/after-download-android">Android step-by-step guide →</a></p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How long does it take from start to a live app?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>Creating the app itself — using either the TDM wizard or Claude Code — takes about 10–30 minutes once you have all your assets ready.</p>
+        <p>Submitting to the App Stores is the part that requires learning. Based on personal experience (as a non-coder), the iOS submission process typically takes <strong>1–3 hours</strong> of trial and error for first-timers. Android may take slightly longer. After submission, apps are listed within <strong>3–5 days</strong> once Apple or Google has reviewed and approved them.</p>
+        <p>With AI assistance available every step of the way, the learning curve is much gentler than it used to be.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group 5: Promotion and earnings -->
+  <div class="qa-group">
+    <div class="qa-group-title">Promotion &amp; Earnings</div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How do I promote my DT Album once it is live?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>Your DT Album will not sell itself — active promotion is essential. Here is what works:</p>
+        <ul>
+          <li>Get your App Store QR code (Claude Code can help you generate and style it) and print it on <strong>concert posters, flyers and merchandise</strong></li>
+          <li>Add the link and QR code to your <strong>website, YouTube videos, TikToks and Reels</strong></li>
+          <li>Promote actively at <strong>live shows</strong> — show the QR code on screen, mention it from the stage</li>
+          <li>Share on social media with a short demo video showing the app experience</li>
+        </ul>
+        <p>Your real fans — the people who show up to concerts and follow your work closely — are the most likely to buy. Focus your promotion where those people already are.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        How much can I realistically earn?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <div class="highlight">
+          1,000 downloads at USD $7 = USD 7,000<br>
+          Minus store fees (~15–30%) = ~USD 5,250<br>
+          Minus developer accounts (USD $99 + $25) = ~USD 5,126<br>
+          Minus AI tooling (~USD $30/month) = ~USD 5,096<br><br>
+          Compare: you would need <strong>over 1.5 million Spotify streams</strong> to earn the same amount.
+        </div>
+        <p>Earnings depend entirely on the size of your audience and how actively you promote. There are no guarantees — but the economics of DT Albums are structurally far better for independent artists than streaming.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group 6: Legal -->
+  <div class="qa-group">
+    <div class="qa-group-title">Legal &amp; Platform Considerations</div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Are there any legal issues I should be aware of?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>The main legal requirement is straightforward: <strong>you must own the rights to all music you publish</strong>. When uploading your DT Album to the App Stores, you sign a disclaimer accepting responsibility for the content you submit.</p>
+        <p>Make sure you have clearance for any samples, collaborations, or covers included in your album before publishing.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Will Apple or Google have a problem with DT Albums?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>App Stores welcome independent developer apps — music apps are a well-established category. However, there are important guidelines to follow:</p>
+        <ul>
+          <li><strong>Quality matters</strong> — apps that appear overly simple, duplicate, or template-like in bulk risk rejection or account suspension. Each DT Album should genuinely represent you as an artist.</li>
+          <li><strong>Content must be original</strong> — do not include music or content you do not own the rights to.</li>
+          <li><strong>Make it yours</strong> — your photo, your music, your lyrics, your story. The fans who buy your DT Album are your real fans, so give them something worth owning.</li>
+        </ul>
+        <p>A thoughtfully crafted, unique DT Album representing a genuine artist is exactly what the App Stores are designed to host.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-q" onclick="toggle(this)">
+        Should I hire a developer or consultant to help?
+        <span class="qa-chevron">▼</span>
+      </div>
+      <div class="qa-a">
+        <p>My honest advice: invest the time to learn AI tools yourself. Take a week, sit down, and start exploring Claude Code or the TDM wizard. The learning curve is real but manageable — and the skills you build will serve you for every future release.</p>
+        <p>Down the road, you will want to refresh your DT Album's look, add new features, or launch another album entirely. If you own the process, each of those things becomes quick and inexpensive. If you depend on hired help for every change, costs multiply fast.</p>
+        <p>AI assistance is available every step of the way. You are not alone in this.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube Banner -->
+  <div class="yt-banner">
+    <div class="yt-icon">▶️</div>
+    <div>
+      <h3>Watch it in action</h3>
+      <p>
+        Video tutorials and walkthroughs are coming soon on our YouTube channel.<br>
+        <a href="https://www.youtube.com/@Direktunes" target="_blank">www.youtube.com/@Direktunes</a>
+        <span style="color:var(--muted);"> — channel under construction, subscribe to be notified when videos go live.</span>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div><img src="logo-white.png" alt="Direktunes" class="footer-logo" /></div>
+    <p>&copy; 2026 Direktunes. All rights reserved. &nbsp;|&nbsp; direktunes.com</p>
+  </div>
+</footer>
+
+<script>
+  function toggle(el) {
+    el.parentElement.classList.toggle('open');
+  }
+  // Open first item by default — already done via class in HTML
+</script>
+
+</body>
+</html>

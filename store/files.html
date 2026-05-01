@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Files — Direktunes</title>
+  <meta name="description" content="Download a sample DT Album and the Claude Code files to build your own." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0C0E1A;
+      color: #F0F0F0;
+      line-height: 1.7;
+    }
+    :root {
+      --blue:   #1A56DB;
+      --blue-l: #3B82F6;
+      --yellow: #F5A623;
+      --red:    #E63946;
+      --dark:   #0C0E1A;
+      --dark2:  #12152A;
+      --dark3:  #1A1E35;
+      --white:  #FFFFFF;
+      --muted:  #8892B0;
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,14,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    nav .inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo-text {
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--yellow); background: rgba(245,166,35,0.1); }
+    @media (max-width: 680px) {
+      .logo-text { font-size: 14px; }
+      .nav-link  { font-size: 12px; padding: 6px 8px; }
+    }
+    @media (max-width: 440px) {
+      .logo-text { display: none; }
+      nav .inner { justify-content: center; }
+    }
+
+    /* ── Page hero ────────────────────────────────────── */
+    .page-hero {
+      padding: 110px 0 56px;
+      text-align: center;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .tag-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
+    .tag-blue   { background: rgba(26,86,219,0.15);  color: var(--blue-l); }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 900; letter-spacing: -1.5px; margin-bottom: 14px;
+    }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p {
+      font-size: 18px; color: var(--muted);
+      max-width: 540px; margin: 0 auto;
+    }
+
+    /* ── Section cards ────────────────────────────────── */
+    .section-block {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+    .section-block h2 {
+      font-size: 22px; font-weight: 800; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-block .lead {
+      font-size: 16px; color: var(--muted); margin-bottom: 28px; line-height: 1.7;
+    }
+
+    /* ── QR section ───────────────────────────────────── */
+    .qr-layout {
+      display: grid; grid-template-columns: auto 1fr; gap: 40px;
+      align-items: start;
+    }
+    .qr-wrap {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .qr-wrap img {
+      width: 200px; height: auto; display: block; border-radius: 8px;
+    }
+    .qr-wrap .qr-label {
+      font-size: 12px; color: #333; font-weight: 700;
+      text-align: center; letter-spacing: 0.5px;
+    }
+    .qr-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .qr-info p  { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 12px; }
+    .qr-info p strong { color: var(--white); }
+    .price-badge {
+      display: inline-block;
+      background: rgba(245,166,35,0.15); color: var(--yellow);
+      font-size: 13px; font-weight: 700;
+      padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .android-soon {
+      background: var(--dark3);
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 12px; padding: 16px 20px;
+      font-size: 14px; color: var(--muted);
+      margin-top: 16px;
+    }
+    .android-soon strong { color: var(--white); }
+
+    /* ── Download section ─────────────────────────────── */
+    .how-to { margin-bottom: 24px; }
+    .how-to ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .how-to ol li {
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 15px; color: var(--muted); line-height: 1.6;
+    }
+    .how-to ol li strong { color: var(--white); }
+    .step-badge {
+      min-width: 26px; height: 26px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .download-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
+    .btn-dl {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: #fff;
+      font-size: 14px; font-weight: 700;
+      padding: 12px 22px; border-radius: 10px;
+      text-decoration: none; transition: opacity .2s, transform .15s;
+    }
+    .btn-dl:hover { opacity: .85; transform: translateY(-2px); }
+    .btn-dl.secondary {
+      background: rgba(59,130,246,0.15);
+      color: var(--blue-l);
+      border: 1px solid rgba(59,130,246,0.3);
+    }
+    .btn-dl.secondary:hover { background: rgba(59,130,246,0.25); }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 0; text-align: center;
+    }
+    footer p { font-size: 13px; color: #444; }
+    .footer-logo { height: 28px; opacity: .5; margin-bottom: 12px; }
+
+    @media (max-width: 620px) {
+      .qr-layout { grid-template-columns: 1fr; }
+      .qr-wrap { width: 100%; }
+      .qr-wrap img { width: 160px; }
+      .section-block { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="inner">
+    <a href="/" class="logo-text">The Direktunes Maker</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/files" class="nav-link active">Files</a>
+      <a href="/start" class="nav-link">Start</a>
+      <a href="/qa" class="nav-link">Q&amp;A</a>
+      <a href="/contact" class="nav-link">Contact Me</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <span class="tag tag-yellow">&#9834; Resources</span>
+    <h1>Files &amp; <em>Examples</em></h1>
+    <p>A sample DT Album you can download right now, and the files you need to build your own using Claude Code.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom: 80px;">
+
+  <!-- Section A: Sample DT Album -->
+  <div class="section-block">
+    <h2>📱 Example DT Album — <em style="color:var(--yellow);font-style:normal;">Musica Qualunque</em></h2>
+    <p class="lead">
+      Experience a real DT Album before you build your own. <em>Musica Qualunque</em> by <strong>Miskia</strong> is a fully working DT Album — six original songs in Italian, packaged as a native iPhone app and published on the App Store. Scan the QR code with your phone to discover it.
+    </p>
+
+    <div class="qr-layout">
+      <div class="qr-wrap">
+        <img src="miskia-qr.jpg" alt="Scan to download Musica Qualunque by Miskia on iOS App Store" />
+        <div class="qr-label">iOS App Store</div>
+      </div>
+
+      <div class="qr-info">
+        <h3>How this works</h3>
+        <p>
+          <strong>Scan the QR code</strong> with your iPhone camera. You will be taken directly to the App Store page for <em>Musica Qualunque</em>. Purchase the app for <strong>USD $1</strong>, download it, and you have a fully working DT Album on your phone — complete with music player, lyrics, artist notes and credits.
+        </p>
+        <span class="price-badge">USD $1 — Pay once, own it forever</span>
+        <p>
+          This is <strong>a working example showing how the DT Album experience works</strong>: scan a QR code → purchase → download the app → play the music anytime, even offline. The album contains six original songs in Italian by the independent artist Miskia.
+        </p>
+        <p style="font-size:14px; color:var(--muted);">
+          Consider this a small voluntary contribution supporting the Direktune project. It is completely fine if you do not want to download this test DT Album. Direktune will not charge anything for using its services.
+        </p>
+
+        <div class="android-soon">
+          <strong>🤖 Android version</strong> — QR code coming soon. The Android version of Musica Qualunque is on its way to Google Play.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B: Claude Code files -->
+  <div class="section-block">
+    <h2>🤖 Build Your Own — Claude Code Files</h2>
+    <p class="lead">
+      If you are already familiar with <a href="https://claude.ai/code" target="_blank" style="color:var(--blue-l);text-decoration:none;">Claude Code</a>, or willing to learn, I am sharing the <strong>CLAUDE.md</strong> file I created and the related <strong>trigger prompt</strong>. These two files allow you to use Claude Code to generate your own DT Album — a complete iOS and Android app — without using the TDM wizard.
+    </p>
+
+    <div class="how-to">
+      <ol>
+        <li>
+          <div class="step-badge">1</div>
+          <div>
+            <strong>Prepare your assets</strong> — place CLAUDE.md in a folder together with your music files (MP3), lyrics files, artist photo, album artwork and app icon.
+          </div>
+        </li>
+        <li>
+          <div class="step-badge">2</div>
+          <div>
+            <strong>Open Claude Code</strong> in that folder. Claude will automatically read the CLAUDE.md file and understand what to build.
+          </div>
+        </li>
+        <li>
+          <div class="step-badge">3</div>
+          <div>
+            <strong>Paste the trigger prompt</strong> as your first message. Claude will ask you for your album details and collect all the information it needs before writing a single line of code.
+          </div>
+        </li>
+        <li>
+          <div class="step-badge">4</div>
+          <div>
+            <strong>Claude builds both apps</strong> — a complete iOS Xcode project and a complete Android Gradle project, ready to open in Xcode and Android Studio.
+          </div>
+        </li>
+        <li>
+          <div class="step-badge">5</div>
+          <div>
+            <strong>Claude guides you through publishing</strong> — Claude Code can also help you submit your apps to the App Stores, analyse errors, and give you step-by-step suggestions and advice along the way.
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="download-btns">
+      <a href="CLAUDE.md" download class="btn-dl">
+        ⬇ Download CLAUDE.md
+      </a>
+      <a href="trigger-prompt.md" download class="btn-dl secondary">
+        ⬇ Download trigger-prompt.md
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div><img src="logo-white.png" alt="Direktunes" class="footer-logo" /></div>
+    <p>&copy; 2026 Direktunes. All rights reserved. &nbsp;|&nbsp; direktunes.com</p>
+  </div>
+</footer>
+
+</body>
+</html>

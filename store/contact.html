@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Me — Direktunes</title>
+  <meta name="description" content="Get in touch with the creator of Direktunes. Questions, feedback, and suggestions are all welcome." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0C0E1A;
+      color: #F0F0F0;
+      line-height: 1.7;
+    }
+    :root {
+      --blue:   #1A56DB;
+      --blue-l: #3B82F6;
+      --yellow: #F5A623;
+      --red:    #E63946;
+      --dark:   #0C0E1A;
+      --dark2:  #12152A;
+      --dark3:  #1A1E35;
+      --white:  #FFFFFF;
+      --muted:  #8892B0;
+    }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,14,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    nav .inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo-text {
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--yellow); background: rgba(245,166,35,0.1); }
+    @media (max-width: 680px) {
+      .logo-text { font-size: 14px; }
+      .nav-link  { font-size: 12px; padding: 6px 8px; }
+    }
+    @media (max-width: 440px) {
+      .logo-text { display: none; }
+      nav .inner { justify-content: center; }
+    }
+
+    /* ── Page hero ────────────────────────────────────── */
+    .page-hero {
+      padding: 110px 0 56px;
+      text-align: center;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .tag-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 900; letter-spacing: -1.5px; margin-bottom: 14px;
+    }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p {
+      font-size: 18px; color: var(--muted);
+      max-width: 500px; margin: 0 auto;
+    }
+
+    /* ── Cards ────────────────────────────────────────── */
+    .card {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 20px; font-weight: 800; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .card .sub {
+      font-size: 14px; color: var(--muted); margin-bottom: 28px;
+    }
+
+    /* ── Contact form ─────────────────────────────────── */
+    label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%; background: var(--dark3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 12px 14px;
+      color: #fff; font-size: 14px; font-family: inherit;
+      outline: none; transition: border-color .2s;
+      margin-bottom: 18px;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: var(--blue-l);
+    }
+    textarea { resize: vertical; min-height: 120px; }
+    .btn-send {
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 13px 28px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: opacity .2s, transform .15s;
+      width: 100%;
+    }
+    .btn-send:hover { opacity: .85; transform: translateY(-1px); }
+    .form-success {
+      display: none; text-align: center; padding: 20px 0;
+    }
+    .form-success .tick { font-size: 44px; margin-bottom: 12px; }
+    .form-success h4 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .form-success p { font-size: 15px; color: var(--muted); }
+
+    /* ── Social links ─────────────────────────────────── */
+    .social-list { display: flex; flex-direction: column; gap: 14px; }
+    .social-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--dark3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 16px 20px;
+      text-decoration: none; color: var(--white);
+      transition: border-color .2s, background .2s;
+    }
+    .social-item:hover {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.04);
+    }
+    .social-icon { font-size: 22px; flex-shrink: 0; }
+    .social-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .social-info p  { font-size: 13px; color: var(--muted); }
+
+    /* ── Disclaimer ───────────────────────────────────── */
+    .disclaimer-card {
+      background: rgba(12,14,26,0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 60px;
+    }
+    .disclaimer-card h3 {
+      font-size: 13px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .disclaimer-card p {
+      font-size: 13px; color: #666; line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .disclaimer-card p:last-child { margin-bottom: 0; }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 0; text-align: center;
+    }
+    footer p { font-size: 13px; color: #444; }
+    .footer-logo { height: 28px; opacity: .5; margin-bottom: 12px; }
+
+    @media (max-width: 560px) {
+      .card { padding: 24px 20px; }
+      .disclaimer-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="inner">
+    <a href="/" class="logo-text">The Direktunes Maker</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/files" class="nav-link">Files</a>
+      <a href="/start" class="nav-link">Start</a>
+      <a href="/qa" class="nav-link">Q&amp;A</a>
+      <a href="/contact" class="nav-link active">Contact Me</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <span class="tag tag-yellow">&#9834; Get in Touch</span>
+    <h1>Contact <em>Me</em></h1>
+    <p>Questions, feedback, or just want to share your experience with Direktunes? I read everything.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom: 40px;">
+
+  <!-- Contact form -->
+  <div class="card">
+    <h2>✉️ Send a Message</h2>
+    <p class="sub">Fill in the form below and I will get back to you as soon as possible.</p>
+
+    <div id="contactForm">
+      <form action="https://formspree.io/f/mjgjalan" method="POST" onsubmit="handleSubmit(event)">
+        <label for="c-name">Your name</label>
+        <input type="text" id="c-name" name="name" placeholder="e.g. Marie Leconte" required />
+
+        <label for="c-email">Your email</label>
+        <input type="email" id="c-email" name="email" placeholder="you@example.com" required />
+
+        <label for="c-msg">Message</label>
+        <textarea id="c-msg" name="message" placeholder="What would you like to ask or share?" required></textarea>
+
+        <button type="submit" class="btn-send">Send Message →</button>
+      </form>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="tick">✅</div>
+      <h4>Message sent!</h4>
+      <p>Thank you — I will get back to you as soon as possible.</p>
+    </div>
+  </div>
+
+  <!-- Social links -->
+  <div class="card">
+    <h2>📡 Find Me Online</h2>
+    <p class="sub">Video content and tutorials are on their way. Subscribe to stay updated.</p>
+
+    <div class="social-list">
+      <a href="https://www.youtube.com/@Direktunes" target="_blank" class="social-item">
+        <div class="social-icon">▶️</div>
+        <div class="social-info">
+          <h4>YouTube — @Direktunes</h4>
+          <p>Tutorials, walkthroughs and DT Album demos — channel under construction, coming soon.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Disclaimer -->
+<div class="container" style="padding-bottom: 80px;">
+  <div class="disclaimer-card">
+    <h3>⚠️ Disclaimer</h3>
+    <p>
+      I am not a computer expert, a lawyer, or a financial advisor. All information provided on this website — including guides, Q&amp;A answers, cost estimates, and technical instructions — is based entirely on my personal experience and may contain errors, inaccuracies, or omissions.
+    </p>
+    <p>
+      Nothing on this website constitutes professional, legal, financial, or technical advice. App Store fees, platform policies, revenue splits, developer programme requirements, and any other third-party terms are subject to change at any time — always verify current terms directly with Apple, Google, and any other relevant platform before making decisions.
+    </p>
+    <p>
+      Results described on this site (downloads, earnings, timelines) are illustrative examples only and are not guarantees of any outcome. Individual results will vary significantly depending on the quality of the work, the size of the artist's audience, and the effort put into promotion.
+    </p>
+    <p>
+      Use all information provided on this site at your own risk. Direktunes and its creator accept no liability for any losses, damages, costs, or issues — direct or indirect — arising from the use of information, files, or tools available on this website.
+    </p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div><img src="logo-white.png" alt="Direktunes" class="footer-logo" /></div>
+    <p>&copy; 2026 Direktunes. All rights reserved. &nbsp;|&nbsp; direktunes.com</p>
+  </div>
+</footer>
+
+<script>
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST', body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+        form.reset();
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch(err) {
+      alert('Something went wrong. Please try again.');
+    }
+  }
+</script>
+
+</body>
+</html>

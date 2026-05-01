@@ -51,32 +51,34 @@
     nav .inner {
       max-width: 1100px; margin: 0 auto; padding: 0 28px;
       display: flex; align-items: center; justify-content: space-between;
-      height: 180px;
-    }
-    nav .inner .nav-right { display: flex; justify-content: flex-end; }
-    .logo-img {
-      height: 160px; width: auto;
-      display: block;
+      height: 64px;
     }
     .logo-text {
-      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
-      color: var(--white); text-decoration: none;
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none; flex-shrink: 0;
     }
     .logo-text span { color: var(--yellow); }
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--yellow); background: rgba(245,166,35,0.1); }
+    @media (max-width: 680px) {
+      .logo-text { font-size: 14px; }
+      .nav-link  { font-size: 12px; padding: 6px 8px; }
+    }
+    @media (max-width: 440px) {
+      .logo-text { display: none; }
+      nav .inner { justify-content: center; }
+    }
 
-    /* ── Coming Soon Button ───────────────────────────── */
-    .nav-cta, .btn-primary, .cta-btn {
+    /* ── Button base ──────────────────────────────────── */
+    .btn-primary, .cta-btn {
       cursor: pointer; border: none; outline: none;
     }
-    .nav-cta {
-      background: var(--yellow); color: #000;
-      font-size: 13px; font-weight: 700;
-      padding: 9px 22px; border-radius: 8px;
-      text-decoration: none; transition: opacity .2s, background .2s;
-      display: inline-block;
-    }
-    .nav-cta:hover { opacity: .85; }
-    .nav-cta.coming { background: #333; color: #aaa; cursor: default; }
 
     /* ── Hero ─────────────────────────────────────────── */
     #hero {
@@ -85,7 +87,7 @@
         rgba(26,86,219,0.18) 0%, transparent 70%),
         radial-gradient(ellipse 50% 40% at 80% 70%,
         rgba(245,166,35,0.10) 0%, transparent 60%), var(--dark);
-      padding-top: 180px;
+      padding-top: 80px;
     }
     #hero .container {
       display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
@@ -348,9 +350,13 @@
 <!-- ── Navbar ──────────────────────────────────────────────────── -->
 <nav>
   <div class="inner">
-    <a href="#" class="logo-text">The Direktunes Maker</a>
-    <div class="nav-right">
-      <a href="/start" class="nav-cta">Get Started</a>
+    <a href="/" class="logo-text">The Direktunes Maker</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">Home</a>
+      <a href="/files" class="nav-link">Files</a>
+      <a href="/start" class="nav-link">Start</a>
+      <a href="/qa" class="nav-link">Q&amp;A</a>
+      <a href="/contact" class="nav-link">Contact Me</a>
     </div>
   </div>
 </nav>

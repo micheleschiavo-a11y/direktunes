@@ -42,14 +42,25 @@
     }
     .logo-img { height: 32px; }
     .logo-text {
-      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
-      color: var(--white); text-decoration: none;
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--white); text-decoration: none; flex-shrink: 0;
     }
-    .nav-back {
-      font-size: 14px; color: var(--muted); text-decoration: none;
-      transition: color .2s;
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-link {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px; border-radius: 8px;
+      transition: color .2s, background .2s; white-space: nowrap;
     }
-    .nav-back:hover { color: var(--white); }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--yellow); background: rgba(245,166,35,0.1); }
+    @media (max-width: 680px) {
+      .logo-text { font-size: 14px; }
+      .nav-link  { font-size: 12px; padding: 6px 8px; }
+    }
+    @media (max-width: 440px) {
+      .logo-text { display: none; }
+      nav .inner { justify-content: center; }
+    }
 
     /* Hero */
     .page-hero {
@@ -276,7 +287,13 @@
 <nav>
   <div class="inner">
     <a href="/" class="logo-text">The Direktunes Maker</a>
-    <a href="/" class="nav-back">← Back to Home</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/files" class="nav-link">Files</a>
+      <a href="/start" class="nav-link active">Start</a>
+      <a href="/qa" class="nav-link">Q&amp;A</a>
+      <a href="/contact" class="nav-link">Contact Me</a>
+    </div>
   </div>
 </nav>
 
