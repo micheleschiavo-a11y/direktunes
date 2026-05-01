@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Files — Direktunes</title>
-  <meta name="description" content="Download a sample DT Album and the Claude Code files to build your own." />
+  <title>Examples — Direktunes</title>
+  <meta name="description" content="See a real DT Album in action. Download Musica Qualunque by Miskia on the App Store." />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -72,7 +72,6 @@
       padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
     }
     .tag-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
-    .tag-blue   { background: rgba(26,86,219,0.15);  color: var(--blue-l); }
     .page-hero h1 {
       font-size: clamp(32px, 5vw, 50px);
       font-weight: 900; letter-spacing: -1.5px; margin-bottom: 14px;
@@ -136,37 +135,6 @@
     }
     .android-soon strong { color: var(--white); }
 
-    /* ── Download section ─────────────────────────────── */
-    .how-to { margin-bottom: 24px; }
-    .how-to ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .how-to ol li {
-      display: flex; gap: 14px; align-items: flex-start;
-      font-size: 15px; color: var(--muted); line-height: 1.6;
-    }
-    .how-to ol li strong { color: var(--white); }
-    .step-badge {
-      min-width: 26px; height: 26px; border-radius: 50%;
-      background: var(--blue); color: #fff;
-      font-size: 12px; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px;
-    }
-    .download-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
-    .btn-dl {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--blue); color: #fff;
-      font-size: 14px; font-weight: 700;
-      padding: 12px 22px; border-radius: 10px;
-      text-decoration: none; transition: opacity .2s, transform .15s;
-    }
-    .btn-dl:hover { opacity: .85; transform: translateY(-2px); }
-    .btn-dl.secondary {
-      background: rgba(59,130,246,0.15);
-      color: var(--blue-l);
-      border: 1px solid rgba(59,130,246,0.3);
-    }
-    .btn-dl.secondary:hover { background: rgba(59,130,246,0.25); }
-
     /* ── Footer ───────────────────────────────────────── */
     footer {
       border-top: 1px solid rgba(255,255,255,0.06);
@@ -191,8 +159,8 @@
     <a href="/" class="logo-text">The Direktunes Maker</a>
     <div class="nav-links">
       <a href="/" class="nav-link">Home</a>
-      <a href="/examples" class="nav-link">Examples</a>
-      <a href="/files" class="nav-link active">Files</a>
+      <a href="/examples" class="nav-link active">Examples</a>
+      <a href="/files" class="nav-link">Files</a>
       <a href="/start" class="nav-link">Start</a>
       <a href="/qa" class="nav-link">Q&amp;A</a>
       <a href="/contact" class="nav-link">Contact Me</a>
@@ -203,63 +171,44 @@
 <!-- Page Hero -->
 <div class="page-hero">
   <div class="container">
-    <span class="tag tag-yellow">&#9834; Resources</span>
-    <h1>Claude Code <em>Files</em></h1>
-    <p>Download the CLAUDE.md file and trigger prompt to build your own DT Album using Claude Code — no wizard needed.</p>
+    <span class="tag tag-yellow">&#9834; See It Live</span>
+    <h1>DT Album <em>Examples</em></h1>
+    <p>Experience a real DT Album before you build your own — available now on the iOS App Store.</p>
   </div>
 </div>
 
 <div class="container" style="padding-bottom: 80px;">
 
-  <!-- Claude Code files -->
-  <div class="section-block" id="build-your-own">
-    <h2>🤖 Build Your Own — Claude Code Files</h2>
+  <!-- Musica Qualunque -->
+  <div class="section-block">
+    <h2>📱 Example DT Album — <em style="color:var(--yellow);font-style:normal;">Musica Qualunque</em></h2>
     <p class="lead">
-      If you are already familiar with <a href="https://claude.ai/code" target="_blank" style="color:var(--blue-l);text-decoration:none;">Claude Code</a>, or willing to learn, I am sharing the <strong>CLAUDE.md</strong> file I created and the related <strong>trigger prompt</strong>. These two files allow you to use Claude Code to generate your own DT Album — a complete iOS and Android app — without using the TDM wizard.
+      <em>Musica Qualunque</em> by <strong>Miskia</strong> is a fully working DT Album — six original songs in Italian, packaged as a native iPhone app and published on the App Store. Scan the QR code with your phone to discover it.
     </p>
 
-    <div class="how-to">
-      <ol>
-        <li>
-          <div class="step-badge">1</div>
-          <div>
-            <strong>Prepare your assets</strong> — place CLAUDE.md in a folder together with your music files (MP3), lyrics files, artist photo, album artwork and app icon.
-          </div>
-        </li>
-        <li>
-          <div class="step-badge">2</div>
-          <div>
-            <strong>Open Claude Code</strong> in that folder. Claude will automatically read the CLAUDE.md file and understand what to build.
-          </div>
-        </li>
-        <li>
-          <div class="step-badge">3</div>
-          <div>
-            <strong>Paste the trigger prompt</strong> as your first message. Claude will ask you for your album details and collect all the information it needs before writing a single line of code.
-          </div>
-        </li>
-        <li>
-          <div class="step-badge">4</div>
-          <div>
-            <strong>Claude builds both apps</strong> — a complete iOS Xcode project and a complete Android Gradle project, ready to open in Xcode and Android Studio.
-          </div>
-        </li>
-        <li>
-          <div class="step-badge">5</div>
-          <div>
-            <strong>Claude guides you through publishing</strong> — Claude Code can also help you submit your apps to the App Stores, analyse errors, and give you step-by-step suggestions and advice along the way.
-          </div>
-        </li>
-      </ol>
-    </div>
+    <div class="qr-layout">
+      <div class="qr-wrap">
+        <img src="miskia-qr.jpg" alt="Scan to download Musica Qualunque by Miskia on iOS App Store" />
+        <div class="qr-label">iOS App Store</div>
+      </div>
 
-    <div class="download-btns">
-      <a href="CLAUDE.md" download class="btn-dl">
-        ⬇ Download CLAUDE.md
-      </a>
-      <a href="trigger-prompt.md" download class="btn-dl secondary">
-        ⬇ Download trigger-prompt.md
-      </a>
+      <div class="qr-info">
+        <h3>How this works</h3>
+        <p>
+          <strong>Scan the QR code</strong> with your iPhone camera. You will be taken directly to the App Store page for <em>Musica Qualunque</em>. Purchase the app for <strong>USD $1</strong>, download it, and you have a fully working DT Album on your phone — complete with music player, lyrics, artist notes and credits.
+        </p>
+        <span class="price-badge">USD $1 — Pay once, own it forever</span>
+        <p>
+          This is <strong>a working example of the DT Album experience</strong>: scan a QR code → purchase → download the app → play the music anytime, even offline. The album contains six original songs in Italian by the independent artist Miskia.
+        </p>
+        <p style="font-size:14px; color:var(--muted);">
+          Consider this a small voluntary contribution supporting the Direktune project. It is completely fine if you do not want to download this example DT Album. Direktune will not charge anything for using its services.
+        </p>
+
+        <div class="android-soon">
+          <strong>🤖 Android version</strong> — QR code coming soon. The Android version of Musica Qualunque is on its way to Google Play.
+        </div>
+      </div>
     </div>
   </div>
 
