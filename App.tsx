@@ -125,12 +125,19 @@ export default function App() {
     }
   }, [songsPlayedCount]);
 
-  // Sync play state and handle auto-advance when queue ends
+  // Sync play state, track changes, and handle auto-advance when queue ends
   useTrackPlayerEvents(
-    [Event.PlaybackState, Event.PlaybackQueueEnded],
+    [Event.PlaybackState, Event.PlaybackQueueEnded, Event.PlaybackActiveTrackChanged],
     async (event) => {
       if (event.type === Event.PlaybackState) {
         usePlayerStore.setState({ isPlaying: event.state === State.Playing });
+      }
+      // Update currentTrackIndex whenever RNTP moves to a new track in the queue
+      if (event.type === Event.PlaybackActiveTrackChanged && event.track != null) {
+        const newIndex = parseInt(event.track.id as string, 10) - 1;
+        if (!isNaN(newIndex)) {
+          usePlayerStore.setState({ currentTrackIndex: newIndex });
+        }
       }
       if (event.type === Event.PlaybackQueueEnded) {
         const { isReady, skipNext } = usePlayerStore.getState();
